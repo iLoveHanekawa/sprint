@@ -1,4 +1,4 @@
-import Page from './components/Page';
+import Page from './Page';
 import './style.css'
 import React from 'react';
 import * as ReactDOM from 'react-dom/client';
