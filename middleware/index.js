@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { existsSync, readFile, writeFile } from 'fs';
+import { readFile, writeFile } from 'fs';
 import dotenv from 'dotenv';
 /**
     * Returns a sprint router to be used as a second argument to app.use()
@@ -21,12 +21,12 @@ export const getSprintRouter = (config) => {
         'SMTP_DEBUG'
     ];
     const router = express.Router();
-    router.get('/', async (req, res, next) => {
+    router.get('/', async (req, res) => {
         return res.json({
             hello: "from middleware"
         });
     });
-    router.get('/get-env', async (req, res, next) => {
+    router.get('/get-env', async (req, res) => {
         readFile(config.envPath, { encoding: 'utf8', flag: 'a+' }, (err, data) => {
             if (err) {
                 return res.status(500).json({
@@ -48,9 +48,22 @@ export const getSprintRouter = (config) => {
                     });
                 }
             });
-            return res.json({
-                status: true
+            readFile(config.envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
+                if (err) {
+                    return res.status(500).json({
+                        status: false,
+                        error: err.message,
+                    });
+                }
+                return res.json({
+                    status: true,
+                    variables: dotenv.parse(data)
+                });
             });
+        });
+        return res.json({
+            status: false,
+            error: 'Something went wrong. Raise an issue at https://github.com/iLoveHanekawa/sprint/issues'
         });
     });
     return router;

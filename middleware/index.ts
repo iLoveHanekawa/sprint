@@ -1,5 +1,5 @@
-import express, { Router, type NextFunction, type Request, type Response } from 'express';
-import { existsSync, readFile, writeFile } from 'fs';
+import express, { Router, type Request, type Response } from 'express';
+import { readFile, writeFile } from 'fs';
 import dotenv from 'dotenv';
 
 type SprintRouterConfig = {
@@ -43,13 +43,13 @@ export const getSprintRouter = (config: SprintRouterConfig): Router => {
     ];
     const router = express.Router();
 
-    router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+    router.get('/', async (req: Request, res: Response) => {
         return res.json({
             hello: "from middleware"
         });
     });
 
-    router.get('/get-env', async (req: Request, res: Response<{ status: boolean, variables?: SprintVariables, error?: string}>, next: NextFunction) => {
+    router.get('/get-env', async (req: Request, res: Response<{ status: boolean, variables?: SprintVariables, error?: string}>) => {
         readFile(config.envPath, { encoding: 'utf8', flag: 'a+'}, (err, data) => {
             if(err) {
                 return res.status(500).json({
@@ -70,10 +70,23 @@ export const getSprintRouter = (config: SprintRouterConfig): Router => {
                     });
                 }
             })
-            return res.json({
-                status: true
+            readFile(config.envPath, { encoding: 'utf8', flag: 'r'}, (err, data) => {
+                if(err) {
+                    return res.status(500).json({
+                        status: false,
+                        error: err.message,
+                    });
+                }
+                return res.json({
+                    status: true,
+                    variables: dotenv.parse<SprintVariables>(data)
+                });
             });
         });
+        return res.json({
+            status: false,
+            error: 'Something went wrong. Raise an issue at https://github.com/iLoveHanekawa/sprint/issues'
+        })
     });
     return router;
 }
