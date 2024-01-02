@@ -1,5 +1,7 @@
 import React from "react";
 
 export default function Header() {
-    return <nav className="bg-black text-white">Header</nav>
+    return <header>
+       <span className="pr-3 py-1">Sprint</span>
+    </header>
 }
