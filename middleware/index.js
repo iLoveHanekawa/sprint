@@ -18,9 +18,33 @@ export const getSprintRouter = (config) => {
         'SMTP_CONTENT_TYPE',
         'SMTP_ENCRYPTION',
         'SMTP_CHARSET',
-        'SMTP_DEBUG'
+        'SMTP_DEBUG',
+        'SPRINT_AUTH_KEY'
     ];
     const router = express.Router();
+    router.use(async (req, res, next) => {
+        const authHeader = req.header('authorization');
+        const token = authHeader?.split(' ')[1];
+        readFile(config.envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
+            if (err) {
+                return res.status(500).json({
+                    status: false,
+                    error: err.message,
+                });
+            }
+            else {
+                if (token === dotenv.parse(data).SPRINT_AUTH_KEY) {
+                    next();
+                }
+                else {
+                    return res.status(401).json({
+                        status: false,
+                        error: "Can't access unauthorized route."
+                    });
+                }
+            }
+        });
+    });
     router.get('/', async (req, res) => {
         return res.json({
             hello: "from middleware"
@@ -40,7 +64,7 @@ export const getSprintRouter = (config) => {
                 if (!(value in envObj))
                     dataToWrite += `\n${value}=`;
             });
-            writeFile(config.envPath, dataToWrite, { flag: 'a+' }, (err) => {
+            writeFile(config.envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
                 if (err) {
                     return res.status(500).json({
                         status: false,
@@ -57,13 +81,10 @@ export const getSprintRouter = (config) => {
                 }
                 return res.json({
                     status: true,
-                    variables: dotenv.parse(data)
+                    variables: dotenv.parse(data),
+                    envPath: config.envPath
                 });
             });
-        });
-        return res.json({
-            status: false,
-            error: 'Something went wrong. Raise an issue at https://github.com/iLoveHanekawa/sprint/issues'
         });
     });
     return router;
