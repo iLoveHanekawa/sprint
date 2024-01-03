@@ -3,10 +3,12 @@ import { readFile, writeFile } from 'fs';
 import dotenv from 'dotenv';
 /**
     * Returns a sprint router to be used as a second argument to app.use()
-    * @param {SprintRouterConfig} config - Object containing an 'envPath' key.
+    * @param {SprintRouterConfig} config - Object containing an 'envPath' key and a 'permissionCallback' key which is a function that returns a Promise<boolean> | boolean. Permission callback, by default, is a function that returns false.
+    * @property {string} config.envPath - File path of the .env file.
+    * @property {function(): boolean} config.permissionCallback - Function that controls access to the routes exposed by the Sprint Router.
     * @returns {Router} An express router.
 */
-export const getSprintRouter = (config) => {
+export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; } }) => {
     const envKeyArr = [
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
@@ -19,31 +21,33 @@ export const getSprintRouter = (config) => {
         'SMTP_ENCRYPTION',
         'SMTP_CHARSET',
         'SMTP_DEBUG',
-        'SPRINT_AUTH_KEY'
     ];
     const router = express.Router();
     router.use(async (req, res, next) => {
-        const authHeader = req.header('authorization');
-        const token = authHeader?.split(' ')[1];
-        readFile(config.envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    status: false,
-                    error: err.message,
-                });
+        try {
+            let possiblePromise = permissionCallback();
+            if (possiblePromise && typeof possiblePromise.then === 'function' && possiblePromise[Symbol.toStringTag] === 'Promise') {
+                possiblePromise = await possiblePromise;
+            }
+            if (typeof possiblePromise === 'boolean' && possiblePromise === true) {
+                return next();
             }
             else {
-                if (token === dotenv.parse(data).SPRINT_AUTH_KEY) {
-                    next();
-                }
-                else {
-                    return res.status(401).json({
-                        status: false,
-                        error: "Can't access unauthorized route."
-                    });
-                }
+                return res.status(401).json({
+                    status: false,
+                    error: 'Unauthorized access.'
+                });
             }
-        });
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.log(error.message);
+            }
+            return res.status(500).json({
+                status: false,
+                error: 'Internal server error.'
+            });
+        }
     });
     router.get('/', async (req, res) => {
         return res.json({
@@ -51,7 +55,7 @@ export const getSprintRouter = (config) => {
         });
     });
     router.get('/get-env', async (req, res) => {
-        readFile(config.envPath, { encoding: 'utf8', flag: 'a+' }, (err, data) => {
+        readFile(envPath, { encoding: 'utf8', flag: 'a+' }, (err, data) => {
             if (err) {
                 return res.status(500).json({
                     status: false,
@@ -64,7 +68,7 @@ export const getSprintRouter = (config) => {
                 if (!(value in envObj))
                     dataToWrite += `\n${value}=`;
             });
-            writeFile(config.envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
+            writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
                 if (err) {
                     return res.status(500).json({
                         status: false,
@@ -72,7 +76,7 @@ export const getSprintRouter = (config) => {
                     });
                 }
             });
-            readFile(config.envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
+            readFile(envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
                 if (err) {
                     return res.status(500).json({
                         status: false,
@@ -82,7 +86,7 @@ export const getSprintRouter = (config) => {
                 return res.json({
                     status: true,
                     variables: dotenv.parse(data),
-                    envPath: config.envPath
+                    envPath: envPath
                 });
             });
         });
