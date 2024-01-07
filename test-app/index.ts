@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getSprintRouter } from 'sprint/routers/index.js';
+import { getSprintRouter } from '@ilovehanekawa/sprint/routers/index.js';
 import { dirname, resolve } from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';

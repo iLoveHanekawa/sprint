@@ -1,6 +1,5 @@
 {
-  "name": "sprint",
-  "private": true,
+  "name": "@ilovehanekawa/sprint",
   "version": "1.0.0",
   "type": "module",
   "description": "SMTP mailing using Nodemailer and Gmail",
