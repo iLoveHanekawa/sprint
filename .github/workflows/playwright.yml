@@ -15,10 +15,12 @@ jobs:
         node-version: 18
     - name: Install dependencies
       run: npm ci
+    - name: Install test application dependencies
+      run: cd test-app && npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Boot servers up
-      run: npm run start &
+      run: npm run actions &
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v3
