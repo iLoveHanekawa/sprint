@@ -1,10 +1,10 @@
-import express, { Router, type Request, type Response, type NextFunction } from 'express';
-import { readFile, writeFile } from 'fs';
-import dotenv from 'dotenv';
+import express, { Router } from 'express';
+import { sprintGreet, getEnv } from './controllers/SprintEnvController.js'
+import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
 
 // TODO all keys gen
 
-type SprintRouterConfig = {
+export type SprintRouterConfig = {
     envPath: string
     permissionCallback?: (() => Promise<boolean>) | (() => boolean)
 }
@@ -36,7 +36,7 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
     * @example 
     * // Note: these configurations work for a .env file located at app root. Also the permission's callback here returns true as its merely an example.
     // Ideally the permission's callback would contain a way to authenticate an admin and only return true if a user with admin role is authenticated.
-    // For production ALWAYS implement the permission's callback to secure the application otherwise your env file can be exposed to anyone who goes to www.example.com/sprint.
+    // For production ALWAYS implement the permissionCallback to secure the application otherwise your env file can be exposed.
     const currentModuleURL = import.meta.url;
     const currentModulePath = fileURLToPath(currentModuleURL);
     const basePath = resolve(dirname(currentModulePath), './.env');
@@ -47,88 +47,9 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
 */
 
 export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; }}: SprintRouterConfig): Router => {
-    const envKeyArr: string[] = [
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'SMTP_HOST',
-        'SMTP_FROM_EMAIL',
-        'SMTP_USERNAME',
-        'SMTP_PASSWORD',
-        'SMTP_PORT',
-        'SMTP_CONTENT_TYPE',
-        'SMTP_ENCRYPTION',
-        'SMTP_CHARSET',
-        'SMTP_DEBUG',
-    ];
     const router = express.Router();
-
-    router.use(async (req: Request, res: Response<{ status: boolean, error: string }>, next: NextFunction) => {
-        try {            
-            let possiblePromise = permissionCallback();
-            if(possiblePromise && typeof (possiblePromise as Promise<boolean>).then === 'function' && (possiblePromise as Promise<boolean>)[Symbol.toStringTag] === 'Promise') {
-                possiblePromise = await possiblePromise;
-            }
-            if(typeof possiblePromise === 'boolean' && possiblePromise === true) {
-                return next();
-            }
-            else {
-                return res.status(401).json({
-                    status: false,
-                    error: 'Unauthorized access.'
-                });
-            }
-        } catch (error) {
-            if(error instanceof Error) {
-                console.log(error.message);
-            }
-            return res.status(500).json({
-                status: false,
-                error: 'Internal server error.'
-            })
-        }
-    });
-
-    router.get('/', async (req: Request, res: Response) => {
-        return res.json({
-            hello: "from middleware"
-        });
-    });
-
-    router.get('/get-env', async (req: Request, res: Response<SprintGetEnvResponse>) => {
-        readFile(envPath, { encoding: 'utf8', flag: 'a+'}, (err, data) => {
-            if(err) {
-                return res.status(500).json({
-                    status: false,
-                    error: err.message,
-                });
-            }
-            const envObj = dotenv.parse<SprintVariables>(data);
-            let dataToWrite = '';
-            envKeyArr.forEach((value, index) => {
-                if(!(value in envObj)) dataToWrite += `\n${value}=`;
-            })
-            writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
-                if(err) {
-                    return res.status(500).json({
-                        status: false,
-                        error: err.message,
-                    });
-                }
-            })
-            readFile(envPath, { encoding: 'utf8', flag: 'r'}, (err, data) => {
-                if(err) {
-                    return res.status(500).json({
-                        status: false,
-                        error: err.message,
-                    });
-                }
-                return res.json({
-                    status: true,
-                    variables: dotenv.parse<SprintVariables>(data),
-                    envPath: envPath
-                });
-            });
-        });
-    });
+    router.get('/', sprintGreet);
+    router.use(SprintMiddleware(permissionCallback));
+    router.get('/get-env', getEnv(envPath));
     return router;
 }
