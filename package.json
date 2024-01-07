@@ -6,14 +6,14 @@
   "description": "SMTP mailing using Nodemailer and Gmail",
   "scripts": {
     "dev": "vite",
-    "start": "concurrently \"vite\" \"cd routers && tsc.cmd -w\" \"cd test-app && tsc.cmd -w\" \"cd test-app && nodemon index.js\"",
+    "start": "concurrently \"vite\" \"cd routers && npx tsc -w\" \"cd test-app && npx tsc -w\" \"cd test-app && nodemon index.js\"",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
     "@types/node": "^20.10.6",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "vite": "^5.0.8"
   },
   "repository": {

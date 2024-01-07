@@ -17,7 +17,7 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Express Server
+    - name: Boot servers up
       run: npm run start &
     - name: Run Playwright tests
       run: npx playwright test
