@@ -1,14 +1,17 @@
 import { createTransport } from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 export const MailController = {
     send: async (req, res) => {
+        console.log("Host: " + process.env.SMTP_HOST);
         try {
             const transport = createTransport({
-                host: "smtp.sendgrid.net",
+                host: process.env.SMTP_HOST,
                 secure: false,
                 port: 587,
                 auth: {
-                    user: 'apikey',
-                    pass: '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'
+                    user: process.env.SMTP_USERNAME,
+                    pass: process.env.SMTP_PASSWORD
                 },
                 tls: {
                     rejectUnauthorized: false,
@@ -16,8 +19,8 @@ export const MailController = {
                 debug: true
             });
             const response = await transport.sendMail({
-                from: "abhishek@29kreativ.com",
-                to: "arjunthakur900@gmail.com",
+                from: "arjunthakur900@gmail.com",
+                to: "neelamtanwar900@gmail.com",
                 subject: "Nodemailer test",
                 text: "Hello from sprint"
             });
