@@ -32,6 +32,9 @@ export default function Page() {
         <div>
             <p>Env file location: { appStore?.envPath }</p>
             <SprintForm />
+            <form method='POST' action="http://localhost:3000/sprint/send">
+                <button type="submit">Test mail</button>
+            </form>
         </div>
     </Layout>
 }

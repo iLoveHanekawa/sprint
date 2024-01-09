@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import { SprintEnvController } from './controllers/SprintEnvController.js'
 import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
+import { MailController } from './controllers/MailController.js';
 
 // TODO all keys gen
 
@@ -53,5 +54,6 @@ export const getSprintRouter = ({ envPath, permissionCallback = () => { return f
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
+    router.post('/send', MailController.send);
     return router; 
 }

@@ -12,7 +12,7 @@ export const SprintEnvController = {
         * Just a placeholder function to indicate that the sprint router is working.
         * @param {Request} req - Express request object
         * @param {Response} res - Express response object
-        * @returns {Promise} - Sends a json response containing a { sprint } key set to a message string. 
+        * @returns {Promise} Sends a json response containing a { sprint } key set to a message string. 
     */
     sprintGreet: async (req: Request, res: Response<{sprint: string}>): Promise<Response<{ sprint: string; }, Record<string, any>>> => {
         return res.json({
@@ -20,9 +20,9 @@ export const SprintEnvController = {
         });
     },
     /**
-        * Just a placeholder function to indicate that the sprint router is working.
+        * This controller will either get an env file or create one and populate it with the variables required by Sprint.
         * @param {string} envPath - The { envPath } string that is a key in the SprintRouterConfig
-        * @returns {GetEnvAsyncFunctionType} - Returns a function that eventually returns a Promise<Response<SprintGetEnvResponse, Record<string, any>>>
+        * @returns {GetEnvAsyncFunctionType} Returns a function that eventually returns a Promise<Response<SprintGetEnvResponse, Record<string, any>>>
     */
     getEnv: (envPath: string): GetEnvAsyncFunctionType => async (req: Request, res: Response<SprintGetEnvResponse>) => {
         // The env variables to look for. 
@@ -78,8 +78,13 @@ export const SprintEnvController = {
             });
         });
     },
-
-    postEnv: (envPath: string) => async(req: Request, res: Response) => {
+    /**
+        * This controller will set the variables received from the Sprint dashboard to the .env file.
+        * @param {string} envPath - The { envPath } string that is a key in the SprintRouterConfig
+        * @returns {GetEnvAsyncFunctionType} Returns a function that eventually returns a Promise<Response<SprintGetEnvResponse, Record<string, any>>>
+    */
+    postEnv: (envPath: string): GetEnvAsyncFunctionType => async(req: Request, res: Response<SprintGetEnvResponse>) => {
+        // Read the contents of the env file.
         readFile(envPath, { encoding: 'utf8', flag: 'r'}, (err: NodeJS.ErrnoException | null, data: string) => {
             if(err) {
                 return res.status(500).json({
@@ -98,6 +103,7 @@ export const SprintEnvController = {
                     }
                 }
             });
+            // Prepare the string to write to the env file.
             splitEnvArr.forEach((value: string, index: number) => {
                 dataToWrite += value;
                 if(index < splitEnvArr.length - 1) dataToWrite += EOL;

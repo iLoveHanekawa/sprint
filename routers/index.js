@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import { SprintEnvController } from './controllers/SprintEnvController.js';
 import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
+import { MailController } from './controllers/MailController.js';
 /**
     * Returns a sprint router to be used as a second argument to app.use()
     * @param {SprintRouterConfig} config - Object containing an 'envPath' key and a 'permissionCallback' key which is a function that returns a Promise<boolean> | boolean. Permission callback, by default, is a function that returns false.
@@ -25,5 +26,6 @@ export const getSprintRouter = ({ envPath, permissionCallback = () => { return f
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
+    router.post('/send', MailController.send);
     return router;
 };
