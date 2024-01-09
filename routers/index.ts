@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { sprintGreet, getEnv } from './controllers/SprintEnvController.js'
+import { SprintEnvController } from './controllers/SprintEnvController.js'
 import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
 
 // TODO all keys gen
@@ -48,8 +48,8 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
 
 export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; }}: SprintRouterConfig): Router => {
     const router = express.Router();
-    router.get('/', sprintGreet);
+    router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
-    router.get('/get-env', getEnv(envPath));
+    router.get('/get-env', SprintEnvController.getEnv(envPath));
     return router;
 }

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { sprintGreet, getEnv } from './controllers/SprintEnvController.js';
+import { SprintEnvController } from './controllers/SprintEnvController.js';
 import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
 /**
     * Returns a sprint router to be used as a second argument to app.use()
@@ -21,8 +21,8 @@ import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
 */
 export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; } }) => {
     const router = express.Router();
-    router.get('/', sprintGreet);
+    router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
-    router.get('/get-env', getEnv(envPath));
+    router.get('/get-env', SprintEnvController.getEnv(envPath));
     return router;
 };
