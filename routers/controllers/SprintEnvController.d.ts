@@ -19,5 +19,6 @@ export declare const SprintEnvController: {
         * @returns {GetEnvAsyncFunctionType} - Returns a function that eventually returns a Promise<Response<SprintGetEnvResponse, Record<string, any>>>
     */
     getEnv: (envPath: string) => GetEnvAsyncFunctionType;
+    postEnv: (envPath: string) => (req: Request, res: Response) => Promise<void>;
 };
 export {};

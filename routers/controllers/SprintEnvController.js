@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "fs";
 import dotenv from 'dotenv';
+import { EOL } from "os";
 export const SprintEnvController = {
     /**
         * Just a placeholder function to indicate that the sprint router is working.
@@ -49,6 +50,56 @@ export const SprintEnvController = {
             });
             // Write the above data to file.
             writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
+                if (err) {
+                    return res.status(500).json({
+                        status: false,
+                        error: err.message,
+                    });
+                }
+            });
+            // Read the same file again and obtain the values for all the variables and send them as a response.
+            readFile(envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
+                if (err) {
+                    return res.status(500).json({
+                        status: false,
+                        error: err.message,
+                    });
+                }
+                return res.json({
+                    status: true,
+                    variables: dotenv.parse(data),
+                    envPath: envPath
+                });
+            });
+        });
+    },
+    postEnv: (envPath) => async (req, res) => {
+        readFile(envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
+            if (err) {
+                return res.status(500).json({
+                    status: false,
+                    error: err.message,
+                });
+            }
+            let dataToWrite = '';
+            let { body } = req;
+            const splitEnvArr = data.split(EOL);
+            splitEnvArr.forEach((envVarLine, index) => {
+                if (envVarLine != '') {
+                    const envVar = envVarLine.split('=')[0];
+                    if (envVar in body) {
+                        splitEnvArr[index] = envVar + '=' + body[envVar];
+                    }
+                }
+            });
+            splitEnvArr.forEach((value, index) => {
+                dataToWrite += value;
+                if (index < splitEnvArr.length - 1)
+                    dataToWrite += EOL;
+            });
+            console.log(dataToWrite);
+            // Write the above data to file.
+            writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'w' }, (err) => {
                 if (err) {
                     return res.status(500).json({
                         status: false,

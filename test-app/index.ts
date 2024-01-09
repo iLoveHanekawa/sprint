@@ -9,6 +9,8 @@ const currentModuleURL = import.meta.url;
 const currentModulePath = fileURLToPath(currentModuleURL);
 const basePath = resolve(dirname(currentModulePath), './.env');
 
+app.use(express.json());
+
 app.get('/', async (req: Request, res: Response) => {
     return res.json({
         hello: "arjun"

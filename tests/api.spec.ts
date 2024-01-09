@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('REST routes', () => {
+
     test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:3000');
     });
+
     test('Sprint router is working', async ({ request }) => {
         const res = await request.get('http://localhost:3000/sprint');
         expect(res.ok()).toBeTruthy();
@@ -11,6 +13,7 @@ test.describe('REST routes', () => {
             sprint: "Sprint router is working."
         });
     });
+
     test('Sprint \'getEnv\' function is working', async ({ request }) => {
         const res = await request.get('http://localhost:3000/sprint/get-env');
         expect(res.ok()).toBeTruthy();
@@ -34,7 +37,8 @@ test.describe('REST routes', () => {
         envKeyArr.forEach((value: string, index: number) => {
             expect(data.variables).toHaveProperty(value);
         });
-        expect(data).toHaveProperty('envPath')
+        expect(data).toHaveProperty('envPath');
         expect(typeof data.envPath).toBe('string');
-    })
+    });
+
 });

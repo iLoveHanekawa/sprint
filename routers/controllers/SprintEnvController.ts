@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type { SprintGetEnvResponse, SprintVariables } from "../index.js";
 import { readFile, writeFile } from "fs";
 import dotenv from 'dotenv';
+import { EOL } from "os";
 
 // Please note that Promise<void> is not actually returned. Its actual return type is Promise<Response<SprintGetEnvResponse, Record<string, any>>> 
 type GetEnvAsyncFunctionType = (req: Request, res: Response<SprintGetEnvResponse>) => Promise<void>;
@@ -51,7 +52,7 @@ export const SprintEnvController = {
             // If a variable from { envKeyArr } is not already present in the env file, create it with empty string value.
             envKeyArr.forEach((value, index) => {
                 if(!(value in envObj)) dataToWrite += `\n${value}=`;
-            })
+            });
             // Write the above data to file.
             writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err: NodeJS.ErrnoException | null) => {
                 if(err) {
@@ -60,7 +61,57 @@ export const SprintEnvController = {
                         error: err.message,
                     });
                 }
-            })
+            });
+            // Read the same file again and obtain the values for all the variables and send them as a response.
+            readFile(envPath, { encoding: 'utf8', flag: 'r'}, (err: NodeJS.ErrnoException | null, data: string) => {
+                if(err) {
+                    return res.status(500).json({
+                        status: false,
+                        error: err.message,
+                    });
+                }
+                return res.json({
+                    status: true,
+                    variables: dotenv.parse<SprintVariables>(data),
+                    envPath: envPath
+                });
+            });
+        });
+    },
+
+    postEnv: (envPath: string) => async(req: Request, res: Response) => {
+        readFile(envPath, { encoding: 'utf8', flag: 'r'}, (err: NodeJS.ErrnoException | null, data: string) => {
+            if(err) {
+                return res.status(500).json({
+                    status: false,
+                    error: err.message,
+                });
+            }
+            let dataToWrite = '';
+            let { body } = req as { body: { [key: string]: string } };
+            const splitEnvArr = data.split(EOL);
+            splitEnvArr.forEach((envVarLine: string, index: number) => {
+                if(envVarLine != '') {
+                    const envVar = envVarLine.split('=')[0];
+                    if(envVar in body) {
+                        splitEnvArr[index] = envVar + '=' + body[envVar];
+                    }
+                }
+            });
+            splitEnvArr.forEach((value: string, index: number) => {
+                dataToWrite += value;
+                if(index < splitEnvArr.length - 1) dataToWrite += EOL;
+            });
+            console.log(dataToWrite);
+            // Write the above data to file.
+            writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'w' }, (err: NodeJS.ErrnoException | null) => {
+                if(err) {
+                    return res.status(500).json({
+                        status: false,
+                        error: err.message,
+                    });
+                } 
+            });
             // Read the same file again and obtain the values for all the variables and send them as a response.
             readFile(envPath, { encoding: 'utf8', flag: 'r'}, (err: NodeJS.ErrnoException | null, data: string) => {
                 if(err) {

@@ -9,7 +9,7 @@ import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
     * @returns {Router} An express router.
     * @example
     * // Note: these configurations work for a .env file located at app root. Also the permission's callback here returns true as its merely an example.
-    // Ideally the permission's callback would contain a way to authenticate an admin and only return true if a user with admin role is authenticated.
+    // Ideally the permission callback would contain a way to authenticate an admin and only return true if a user with admin role is authenticated.
     // For production ALWAYS implement the permissionCallback to secure the application otherwise your env file can be exposed.
     const currentModuleURL = import.meta.url;
     const currentModulePath = fileURLToPath(currentModuleURL);
@@ -24,5 +24,6 @@ export const getSprintRouter = ({ envPath, permissionCallback = () => { return f
     router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
+    router.post('/post-env', SprintEnvController.postEnv(envPath));
     return router;
 };
