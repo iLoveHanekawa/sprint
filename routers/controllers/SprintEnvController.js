@@ -93,7 +93,9 @@ export const SprintEnvController = {
             }
             let dataToWrite = '';
             let { body } = req;
+            // Convert the env file contents to an array of lines.
             const splitEnvArr = data.split(EOL);
+            // Iterate over the lines and and if the env variable matches a variable in payload, set it's value.
             splitEnvArr.forEach((envVarLine, index) => {
                 if (envVarLine !== '') {
                     const envVar = envVarLine.split('=')[0];
