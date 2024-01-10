@@ -3,6 +3,7 @@ import Layout from './layout/Layout';
 import { SprintGetEnvResponse, SprintVariables } from '../routers';
 import { AppContext, AppContextType } from './contexts/AppContext';
 import SprintForm from './components/SprintForm';
+import TestMailForm from './components/TestMailForm';
 
 export default function Page() {
 
@@ -32,9 +33,7 @@ export default function Page() {
         <div>
             <p>Env file location: { appStore?.envPath }</p>
             <SprintForm />
-            <form method='POST' action="http://localhost:3000/sprint/send">
-                <button type="submit">Test mail</button>
-            </form>
+            <TestMailForm />
         </div>
     </Layout>
 }

@@ -5,12 +5,16 @@ dotenv.config();
 
 export const MailController = {
     send: async (req: Request, res: Response) => {
-        console.log("Host: " + process.env.SMTP_HOST)
         try {
+            const { 
+                subject = process.env.SMTP_TEST_SUBJECT, 
+                to = process.env.SMTP_TEST_RECIPIENT_EMAIL, 
+                html = process.env.SMTP_TEST_CONTENT 
+            } = req.body;
             const transport = createTransport({
                 host: process.env.SMTP_HOST,
                 secure: false,
-                port: 587,
+                port: Number(process.env.SMTP_PORT),
                 auth: {
                     user: process.env.SMTP_USERNAME,
                     pass: process.env.SMTP_PASSWORD
@@ -20,11 +24,15 @@ export const MailController = {
                 },
                 debug: true
             });
+
             const response = await transport.sendMail({
-                from: "arjunthakur900@gmail.com",
-                to: "neelamtanwar900@gmail.com",
-                subject: "Nodemailer test",
-                text: "Hello from sprint"
+                from: { 
+                    address: process.env.SMTP_FROM_EMAIL!,
+                    name: process.env.SMTP_FROM_NAME!
+                },
+                to,
+                subject,
+                html
             });
 
             return res.json({

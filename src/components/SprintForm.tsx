@@ -18,6 +18,10 @@ export default function SprintForm() {
         { key: 'SMTP_ENCRYPTION', value: 'SMTP encryption' },
         { key: 'SMTP_CHARSET', value: 'SMTP charset' },
         { key: 'SMTP_DEBUG', value: 'SMTP debug' },
+        { key: 'SMTP_FROM_NAME', value: 'SMTP from name' },
+        { key: 'SMTP_TEST_RECIPIENT_EMAIL', value: 'SMTP test recipient\'s email' },
+        { key: 'SMTP_TEST_SUBJECT', value: ' SMTP test subject' },
+        { key: 'SMTP_TEST_CONTENT', value: 'SMTP test content' }
     ];
     
     const appStore = React.useContext<AppContextType | null>(AppContext);
@@ -42,10 +46,14 @@ export default function SprintForm() {
         <ul>
             {envKeyArr.map(({ key, value }: { key: string, value: string }, index: number) => {
                 return <li key={ index }>
-                    {(appStore?.data && key in appStore?.data!) && <div>
+                    {(appStore?.data && key in appStore?.data!) && key !== 'SMTP_TEST_CONTENT'? <div>
                         <input name={ key } onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             appStore?.setData({ ...appStore.data as SprintVariables, [key]: event.currentTarget.value });
                         }} value={ appStore.data[key] } placeholder={ value } />
+                    </div>: <div>
+                        <textarea maxLength={1000} name={ key } onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+                                appStore?.setData({ ...appStore.data as SprintVariables, [key]: event.currentTarget.value });
+                            }} value={ appStore?.data![key] } placeholder={ value } />
                     </div>}
                 </li>
             })}

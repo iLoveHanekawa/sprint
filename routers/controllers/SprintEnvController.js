@@ -25,6 +25,7 @@ export const SprintEnvController = {
             'GOOGLE_CLIENT_SECRET',
             'SMTP_HOST',
             'SMTP_FROM_EMAIL',
+            'SMTP_FROM_NAME',
             'SMTP_USERNAME',
             'SMTP_PASSWORD',
             'SMTP_PORT',
@@ -32,6 +33,9 @@ export const SprintEnvController = {
             'SMTP_ENCRYPTION',
             'SMTP_CHARSET',
             'SMTP_DEBUG',
+            'SMTP_TEST_RECIPIENT_EMAIL',
+            'SMTP_TEST_SUBJECT',
+            'SMTP_TEST_CONTENT'
         ];
         // Read or create env file.
         readFile(envPath, { encoding: 'utf8', flag: 'a+' }, (err, data) => {
@@ -46,7 +50,7 @@ export const SprintEnvController = {
             // If a variable from { envKeyArr } is not already present in the env file, create it with empty string value.
             envKeyArr.forEach((value, index) => {
                 if (!(value in envObj))
-                    dataToWrite += `\n${value}=`;
+                    dataToWrite += `${EOL + value}=`;
             });
             // Write the above data to file.
             writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
@@ -91,7 +95,7 @@ export const SprintEnvController = {
             let { body } = req;
             const splitEnvArr = data.split(EOL);
             splitEnvArr.forEach((envVarLine, index) => {
-                if (envVarLine != '') {
+                if (envVarLine !== '') {
                     const envVar = envVarLine.split('=')[0];
                     if (envVar in body) {
                         splitEnvArr[index] = envVar + '=' + body[envVar];
@@ -104,7 +108,6 @@ export const SprintEnvController = {
                 if (index < splitEnvArr.length - 1)
                     dataToWrite += EOL;
             });
-            console.log(dataToWrite);
             // Write the above data to file.
             writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'w' }, (err) => {
                 if (err) {

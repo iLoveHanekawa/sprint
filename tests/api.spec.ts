@@ -33,6 +33,9 @@ test.describe('REST routes', () => {
             'SMTP_ENCRYPTION',
             'SMTP_CHARSET',
             'SMTP_DEBUG',
+            'SMTP_FROM',
+            'SMTP_FROM_NAME',
+            'SMTP_DEBUG'
         ];
         envKeyArr.forEach((value: string, index: number) => {
             expect(data.variables).toHaveProperty(value);

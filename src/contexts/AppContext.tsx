@@ -26,7 +26,10 @@ export default function AppContextProvider({ children }: AppContextProviderType)
         SMTP_HOST: '',
         SMTP_PASSWORD: '',
         SMTP_PORT: '',
-        SMTP_USERNAME: ''   
+        SMTP_USERNAME: '',
+        SMTP_TEST_CONTENT: '',
+        SMTP_TEST_RECIPIENT_EMAIL: '',
+        SMTP_TEST_SUBJECT: ''
     });
 
     const [envPath, setEnvPath] = React.useState<string>('');

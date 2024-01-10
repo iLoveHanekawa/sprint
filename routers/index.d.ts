@@ -16,6 +16,9 @@ export type SprintVariables = JSObject<{
     SMTP_ENCRYPTION: string;
     SMTP_CHARSET: string;
     SMTP_DEBUG: string;
+    SMTP_TEST_RECIPIENT_EMAIL: string;
+    SMTP_TEST_SUBJECT: string;
+    SMTP_TEST_CONTENT: string;
     [key: string]: string;
 }>;
 export type SprintGetEnvResponse = {
