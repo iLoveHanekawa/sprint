@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
 import type { SprintGetEnvResponse } from "../index.js";
 type GetEnvAsyncFunctionType = (req: Request, res: Response<SprintGetEnvResponse>) => Promise<void>;
+/**
+ * Controller for handling env mutations.
+*/
 export declare const SprintEnvController: {
     /**
         * Just a placeholder function to indicate that the sprint router is working.

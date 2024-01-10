@@ -7,6 +7,9 @@ import { EOL } from "os";
 // Please note that Promise<void> is not actually returned. Its actual return type is Promise<Response<SprintGetEnvResponse, Record<string, any>>> 
 type GetEnvAsyncFunctionType = (req: Request, res: Response<SprintGetEnvResponse>) => Promise<void>;
 
+/**
+ * Controller for handling env mutations.
+*/
 export const SprintEnvController = {
     /**
         * Just a placeholder function to indicate that the sprint router is working.

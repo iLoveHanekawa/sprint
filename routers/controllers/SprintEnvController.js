@@ -1,6 +1,9 @@
 import { readFile, writeFile } from "fs";
 import dotenv from 'dotenv';
 import { EOL } from "os";
+/**
+ * Controller for handling env mutations.
+*/
 export const SprintEnvController = {
     /**
         * Just a placeholder function to indicate that the sprint router is working.
