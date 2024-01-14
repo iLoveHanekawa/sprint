@@ -12,4 +12,4 @@ test("Mail is sent successfully", async () => {
     expect(data).toHaveProperty('status', true);
     expect(data).toHaveProperty('message', 'Email sent successfully');
     expect(data.mailer).toHaveProperty('rejected', []);
-})
+});
