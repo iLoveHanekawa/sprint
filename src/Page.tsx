@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from './layout/Layout';
-import { SprintGetEnvResponse, SprintVariables } from '../routers';
+import { SprintGetEnvResponse, SprintVariables } from '../router';
 import { AppContext, AppContextType } from './contexts/AppContext';
 import SprintForm from './components/SprintForm';
 import TestMailForm from './components/TestMailForm';
@@ -34,6 +34,7 @@ export default function Page() {
             <p>Env file location: { appStore?.envPath }</p>
             <SprintForm />
             <TestMailForm />
+            <a href="http://localhost:3000/sprint/google/consent">Get permission</a>
         </div>
     </Layout>
 }

@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import { AppContext, AppContextType } from '../contexts/AppContext';
-import { SprintGetEnvResponse, SprintVariables } from '../../routers';
+import { SprintGetEnvResponse, SprintVariables } from '../../router';
 
 export default function SprintForm() {
 

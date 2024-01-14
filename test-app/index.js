@@ -1,19 +1,9 @@
 import express from 'express';
-import { getSprintRouter } from '@ilovehanekawa/sprint/routers/index.js';
+import { getSprintRouter } from '@ilovehanekawa/sprint/router/index.js';
 import { dirname, resolve } from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 const app = express();
-const someObject = {
-    a: 1,
-    b: 1,
-};
-const objectKeys = (obj) => {
-    return Object.keys(obj);
-};
-Object.keys(someObject).forEach((key) => {
-    console.log(someObject[key]);
-});
 const currentModuleURL = import.meta.url;
 const currentModulePath = fileURLToPath(currentModuleURL);
 const basePath = resolve(dirname(currentModulePath), './.env');
@@ -28,7 +18,7 @@ app.use(cors({
 }));
 app.use('/sprint', getSprintRouter({
     envPath: basePath,
-    permissionCallback: () => true
+    permissionCallback: () => true,
 }));
 app.listen(3000, () => {
     console.log('server live at http://localhost:3000');

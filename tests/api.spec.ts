@@ -3,12 +3,12 @@ import dotenv, { DotenvParseOutput } from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import { promises as fs } from 'fs';
-import { SprintGetEnvResponse, SprintVariables } from '../routers';
+import { SprintGetEnvResponse, SprintVariables } from '../router';
 
 const currentModuleURL = import.meta.url;
 const currentModulePath = fileURLToPath(currentModuleURL);
 const basePath = resolve(dirname(currentModulePath), '../test-app/.env');
-dotenv.config({path: basePath});
+dotenv.config({ path: basePath });
 
 test.describe('REST routes', () => {
 
