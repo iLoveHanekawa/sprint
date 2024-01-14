@@ -63,9 +63,7 @@ export const getSprintRouter = ({ envPath, permissionCallback = () => { return f
     router.post('/post-env', SprintEnvController.postEnv(envPath));
     router.post('/send', MailController.send(envPath));
     router.use('/google', GoogleMiddleware(envPath));
-    router.get('/google/consent', GoogleClientController.showConsentScreen());
-    router.get('/google/code', async(req, res) => {
-        res.json(req.query);
-    });
+    router.get('/google/consent', GoogleClientController.showConsentScreen);
+    router.get('/google/code', GoogleClientController.getTokens);
     return router; 
 }

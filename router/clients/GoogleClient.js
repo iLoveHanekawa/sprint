@@ -1,4 +1,5 @@
 import { URLSearchParams } from 'url';
+import fetch from 'node-fetch';
 export class GoogleClient {
     constructor(googleClientConfig) {
         this.oauthCodeUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -19,5 +20,23 @@ export class GoogleClient {
             response_type: 'code',
             state: 'state_parameter_passthrough_value'
         })).toString();
+    }
+    async getCodeExchangeRequestBody(code) {
+        const requestBody = {
+            code,
+            client_id: this.clientId,
+            client_secret: this.clientSecret,
+            grant_type: 'authorization_code',
+            redirect_uri: this.redirectUrl
+        };
+        const res = await fetch(this.tokenUrl, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody),
+            method: "POST"
+        });
+        const data = await res.json();
+        return data;
     }
 }

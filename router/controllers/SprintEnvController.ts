@@ -72,7 +72,7 @@ export const SprintEnvController = {
             } catch (error) {
                 return res.status(500).json({
                     status: false,
-                    error: 'Something went wrong.'
+                    error: 'Failed to write or read from env file.'
                 });
             }
             // Write the above data to file.

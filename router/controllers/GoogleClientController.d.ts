@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
 export declare const GoogleClientController: {
-    showConsentScreen: () => (req: Request, res: Response) => Promise<void>;
+    showConsentScreen: (req: Request, res: Response) => Promise<void>;
+    getTokens: (req: Request, res: Response) => Promise<void>;
 };

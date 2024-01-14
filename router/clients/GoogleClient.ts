@@ -1,4 +1,12 @@
 import { URLSearchParams } from 'url';
+import fetch from 'node-fetch'
+type GoogleCodeExchangeRequest = {
+    code: string
+    client_id: string
+    client_secret: string
+    redirect_uri: string
+    grant_type: 'authorization_code'
+}
 
 type OAuthCodeRequestPayload = {
     scope: string
@@ -39,5 +47,24 @@ export class GoogleClient {
             response_type: 'code',
             state: 'state_parameter_passthrough_value'
         } as OAuthCodeRequestPayload)).toString();
+    }
+
+    public async getCodeExchangeRequestBody(code: string) {
+        const requestBody: GoogleCodeExchangeRequest = {
+            code,
+            client_id: this.clientId as string,
+            client_secret: this.clientSecret as string,
+            grant_type: 'authorization_code',
+            redirect_uri: this.redirectUrl
+        }
+        const res = await fetch(this.tokenUrl, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody),
+            method: "POST"
+        });
+        const data = await res.json();
+        return data;
     }
 }

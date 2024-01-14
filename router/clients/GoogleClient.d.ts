@@ -9,4 +9,5 @@ export declare class GoogleClient {
         redirectUrl: string;
     });
     getURLForConsentScreen(): string;
+    getCodeExchangeRequestBody(code: string): Promise<unknown>;
 }
