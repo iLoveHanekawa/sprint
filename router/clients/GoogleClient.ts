@@ -26,7 +26,7 @@ export class GoogleClient {
     clientId: string | undefined;
     clientSecret: string | undefined;
     tokenUrl: string;
-
+    //TODO state
     constructor(googleClientConfig: { redirectUrl: string }) {
         this.oauthCodeUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
         this.scopes = 'https://mail.google.com/';
@@ -50,21 +50,28 @@ export class GoogleClient {
     }
 
     public async getCodeExchangeRequestBody(code: string) {
-        const requestBody: GoogleCodeExchangeRequest = {
-            code,
-            client_id: this.clientId as string,
-            client_secret: this.clientSecret as string,
-            grant_type: 'authorization_code',
-            redirect_uri: this.redirectUrl
+        try {
+            const requestBody: GoogleCodeExchangeRequest = {
+                code,
+                client_id: this.clientId as string,
+                client_secret: this.clientSecret as string,
+                grant_type: 'authorization_code',
+                redirect_uri: this.redirectUrl
+            }
+            const res = await fetch(this.tokenUrl, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody),
+                method: "POST"
+            });
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            return {
+                success: false,
+                message: 'Internal server error while trying to exchange code.'
+            }
         }
-        const res = await fetch(this.tokenUrl, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody),
-            method: "POST"
-        });
-        const data = await res.json();
-        return data;
     }
 }
