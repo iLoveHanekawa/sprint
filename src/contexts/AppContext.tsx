@@ -1,5 +1,5 @@
 import React from "react";
-import { SprintVariables } from "../../routers";
+import { SprintVariables } from "../../router";
 
 export type AppContextType = {
     data: SprintVariables | undefined

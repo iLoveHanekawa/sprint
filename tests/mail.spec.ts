@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MailResponseType } from '../routers/controllers/MailController';
+import { MailResponseType } from '../router/controllers/MailController';
 
 test("Mail is sent successfully", async () => {
     const res = await fetch("http://localhost:3000/sprint/send", {
