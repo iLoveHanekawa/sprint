@@ -29,6 +29,7 @@
     "url": "git+https://github.com/iLoveHanekawa/sprint.git"
   },
   "dependencies": {
+    "@ilovehanekawa/sprint": "^1.1.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "node-fetch": "^3.3.2",
