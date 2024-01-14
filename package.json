@@ -5,7 +5,7 @@
   "description": "SMTP mailing using Nodemailer and Gmail",
   "scripts": {
     "dev": "vite",
-    "start": "concurrently \"vite\" \"cd routers && tsc.cmd -w\" \"cd test-app && tsc.cmd -w\" \"cd test-app && npx nodemon index.js\"",
+    "start": "concurrently \"vite\" \"cd router && tsc.cmd -w\" \"cd test-app && tsc.cmd -w\" \"cd test-app && npx nodemon index.js\"",
     "actions": "concurrently \"vite\" \"cd test-app && npx nodemon index.js\"",
     "build": "tsc && vite build",
     "preview": "vite preview"

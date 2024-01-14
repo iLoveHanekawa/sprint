@@ -1,17 +1,11 @@
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
-dotenv.config();
 /**
  * Controller for handling email sending functionality.
 */
 export const MailController = {
-    /**
-     * Sends an email using Nodemailer.
-     * @param {Request} req - Express request object.
-     * @param {Response} res - Express response object.
-     * @returns {Response} JSON response indicating the status of the email sending operation.
-    */
-    send: async (req, res) => {
+    send: (envPath) => async (req, res) => {
+        dotenv.config({ path: envPath });
         try {
             // Destructure request body or use default values if not provided
             const { subject = process.env.SMTP_TEST_SUBJECT, to = process.env.SMTP_TEST_RECIPIENT_EMAIL, html = process.env.SMTP_TEST_CONTENT } = req.body;

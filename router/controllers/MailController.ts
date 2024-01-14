@@ -2,7 +2,6 @@ import type { Request, Response } from "express";
 import { createTransport, type SentMessageInfo } from 'nodemailer';
 import dotenv from 'dotenv';
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
-dotenv.config();
 
 export type MailResponseType = { status: boolean, message?: string, mailer?: SMTPTransport.SentMessageInfo, error?: string }
 
@@ -10,13 +9,8 @@ export type MailResponseType = { status: boolean, message?: string, mailer?: SMT
  * Controller for handling email sending functionality.
 */
 export const MailController = {
-    /**
-     * Sends an email using Nodemailer.
-     * @param {Request} req - Express request object.
-     * @param {Response} res - Express response object.
-     * @returns {Response} JSON response indicating the status of the email sending operation.
-    */
-    send: async (req: Request, res: Response<MailResponseType>): Promise<Response<MailResponseType, Record<string, any>>> => {
+   send: (envPath: string) => async (req: Request, res: Response<MailResponseType>): Promise<Response<MailResponseType, Record<string, any>>> => {
+        dotenv.config({ path: envPath });
         try {
             // Destructure request body or use default values if not provided
             const { 

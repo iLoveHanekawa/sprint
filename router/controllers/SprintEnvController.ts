@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { SprintGetEnvResponse, SprintVariables } from "../index.js";
-import { readFile, writeFile } from "fs";
+import { readFile, writeFile, promises as fs } from "fs";
 import dotenv from 'dotenv';
 import { EOL } from "os";
 
@@ -47,7 +47,7 @@ export const SprintEnvController = {
             'SMTP_TEST_CONTENT'
         ];
         // Read or create env file.
-        readFile(envPath, { encoding: 'utf8', flag: 'a+'}, (err: NodeJS.ErrnoException | null, data: string) => {
+        readFile(envPath, { encoding: 'utf8', flag: 'a+'}, async (err: NodeJS.ErrnoException | null, data: string) => {
             if(err) {
                 return res.status(500).json({
                     status: false,
@@ -60,29 +60,22 @@ export const SprintEnvController = {
             envKeyArr.forEach((value, index) => {
                 if(!(value in envObj)) dataToWrite += `${EOL + value}=`;
             });
-            // Write the above data to file.
-            writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err: NodeJS.ErrnoException | null) => {
-                if(err) {
-                    return res.status(500).json({
-                        status: false,
-                        error: err.message,
-                    });
-                }
-            });
-            // Read the same file again and obtain the values for all the variables and send them as a response.
-            readFile(envPath, { encoding: 'utf8', flag: 'r'}, (err: NodeJS.ErrnoException | null, data: string) => {
-                if(err) {
-                    return res.status(500).json({
-                        status: false,
-                        error: err.message,
-                    });
-                }
+            try {
+                await fs.writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' });
+                // Read the same file again and obtain the values for all the variables and send them as a response.
+                const readContent = await fs.readFile(envPath, { encoding: 'utf8', flag: 'r'});
                 return res.json({
                     status: true,
-                    variables: dotenv.parse<SprintVariables>(data),
+                    variables: dotenv.parse<SprintVariables>(readContent),
                     envPath: envPath
                 });
-            });
+            } catch (error) {
+                return res.status(500).json({
+                    status: false,
+                    error: 'Something went wrong.'
+                });
+            }
+            // Write the above data to file.
         });
     },
     /**

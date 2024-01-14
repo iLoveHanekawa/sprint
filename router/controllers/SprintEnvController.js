@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "fs";
+import { readFile, writeFile, promises as fs } from "fs";
 import dotenv from 'dotenv';
 import { EOL } from "os";
 /**
@@ -41,7 +41,7 @@ export const SprintEnvController = {
             'SMTP_TEST_CONTENT'
         ];
         // Read or create env file.
-        readFile(envPath, { encoding: 'utf8', flag: 'a+' }, (err, data) => {
+        readFile(envPath, { encoding: 'utf8', flag: 'a+' }, async (err, data) => {
             if (err) {
                 return res.status(500).json({
                     status: false,
@@ -55,29 +55,23 @@ export const SprintEnvController = {
                 if (!(value in envObj))
                     dataToWrite += `${EOL + value}=`;
             });
-            // Write the above data to file.
-            writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' }, (err) => {
-                if (err) {
-                    return res.status(500).json({
-                        status: false,
-                        error: err.message,
-                    });
-                }
-            });
-            // Read the same file again and obtain the values for all the variables and send them as a response.
-            readFile(envPath, { encoding: 'utf8', flag: 'r' }, (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        status: false,
-                        error: err.message,
-                    });
-                }
+            try {
+                await fs.writeFile(envPath, dataToWrite, { encoding: 'utf8', flag: 'a+' });
+                // Read the same file again and obtain the values for all the variables and send them as a response.
+                const readContent = await fs.readFile(envPath, { encoding: 'utf8', flag: 'r' });
                 return res.json({
                     status: true,
-                    variables: dotenv.parse(data),
+                    variables: dotenv.parse(readContent),
                     envPath: envPath
                 });
-            });
+            }
+            catch (error) {
+                return res.status(500).json({
+                    status: false,
+                    error: 'Something went wrong.'
+                });
+            }
+            // Write the above data to file.
         });
     },
     /**

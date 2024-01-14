@@ -2,6 +2,8 @@ import express, { Router } from 'express';
 import { SprintEnvController } from './controllers/SprintEnvController.js'
 import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
 import { MailController } from './controllers/MailController.js';
+import { GoogleClientController } from './controllers/GoogleClientController.js';
+import { GoogleMiddleware } from './middlewares/GoogleClientMiddleware.js';
 
 // TODO all keys gen
 
@@ -53,12 +55,17 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
     }));
 */
 
-export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; }}: SprintRouterConfig): Router => {
+export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; } }: SprintRouterConfig): Router => {
     const router = express.Router();
     router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
-    router.post('/send', MailController.send);
+    router.post('/send', MailController.send(envPath));
+    router.use('/google', GoogleMiddleware(envPath));
+    router.get('/google/consent', GoogleClientController.showConsentScreen());
+    router.get('/google/code', async(req, res) => {
+        res.json(req.query);
+    });
     return router; 
 }
