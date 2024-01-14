@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createTransport } from 'nodemailer';
+import { createTransport, type SentMessageInfo } from 'nodemailer';
 import dotenv from 'dotenv';
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 dotenv.config();
@@ -61,6 +61,7 @@ export const MailController = {
             return res.status(500).json({
                 status: false,
                 error: 'Failed to send email',
+                mailer: error as SentMessageInfo
             });
         }
     }

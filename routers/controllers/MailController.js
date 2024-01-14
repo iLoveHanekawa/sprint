@@ -52,6 +52,7 @@ export const MailController = {
             return res.status(500).json({
                 status: false,
                 error: 'Failed to send email',
+                mailer: error
             });
         }
     }
