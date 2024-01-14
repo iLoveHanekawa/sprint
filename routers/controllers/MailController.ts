@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 dotenv.config();
 
-type MailResponseType = { status: boolean, message?: string, mailer?: SMTPTransport.SentMessageInfo, error?: string }
+export type MailResponseType = { status: boolean, message?: string, mailer?: SMTPTransport.SentMessageInfo, error?: string }
 
 /**
  * Controller for handling email sending functionality.

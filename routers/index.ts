@@ -30,6 +30,8 @@ export type SprintVariables = JSObject<{
     [key: string]: string
 }>
 
+// TODO move this type elsewhere
+
 export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariables, error?: string, envPath?: string };
 
 /**

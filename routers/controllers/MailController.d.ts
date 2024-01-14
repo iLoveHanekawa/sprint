@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
-type MailResponseType = {
+export type MailResponseType = {
     status: boolean;
     message?: string;
     mailer?: SMTPTransport.SentMessageInfo;
@@ -18,4 +18,3 @@ export declare const MailController: {
     */
     send: (req: Request, res: Response<MailResponseType>) => Promise<Response<MailResponseType, Record<string, any>>>;
 };
-export {};
