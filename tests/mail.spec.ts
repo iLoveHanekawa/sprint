@@ -9,7 +9,6 @@ test("Mail is sent successfully", async () => {
             }
         });
     const data: MailResponseType = await res.json();
-    console.log(data);
     expect(data).toHaveProperty('status', true);
     expect(data).toHaveProperty('message', 'Email sent successfully');
     expect(data.mailer).toHaveProperty('rejected', []);
