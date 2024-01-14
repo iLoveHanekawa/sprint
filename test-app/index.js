@@ -4,6 +4,16 @@ import { dirname, resolve } from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 const app = express();
+const someObject = {
+    a: 1,
+    b: 1,
+};
+const objectKeys = (obj) => {
+    return Object.keys(obj);
+};
+Object.keys(someObject).forEach((key) => {
+    console.log(someObject[key]);
+});
 const currentModuleURL = import.meta.url;
 const currentModulePath = fileURLToPath(currentModuleURL);
 const basePath = resolve(dirname(currentModulePath), './.env');
