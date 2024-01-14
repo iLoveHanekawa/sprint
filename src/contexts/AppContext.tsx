@@ -3,13 +3,9 @@ import { SprintVariables } from "../../routers";
 
 export type AppContextType = {
     data: SprintVariables | undefined
-    setData: React.Dispatch<React.SetStateAction<SprintVariables | undefined>>
+    setData: React.Dispatch<React.SetStateAction<SprintVariables>>
     envPath: string
     setEnvPath: React.Dispatch<React.SetStateAction<string>>
-    googleClientId: string
-    setGoogleClientId: React.Dispatch<React.SetStateAction<string>>
-    googleSecretKey: string
-    setGoogleSecretKey: React.Dispatch<React.SetStateAction<string>>
 }
 
 type AppContextProviderType = {
@@ -19,11 +15,25 @@ type AppContextProviderType = {
 export const AppContext = React.createContext<AppContextType | null>(null);
 
 export default function AppContextProvider({ children }: AppContextProviderType) {
-    const [data, setData] = React.useState<SprintVariables | undefined>();
-    const [googleClientId, setGoogleClientId] = React.useState<string>('');
-    const [googleSecretKey, setGoogleSecretKey] = React.useState<string>('');
+    const [data, setData] = React.useState<SprintVariables>({
+        GOOGLE_CLIENT_ID: '',
+        GOOGLE_CLIENT_SECRET: '',
+        SMTP_CHARSET: '',
+        SMTP_CONTENT_TYPE: 'text/html',
+        SMTP_DEBUG: '',
+        SMTP_ENCRYPTION: '',
+        SMTP_FROM_EMAIL: '',
+        SMTP_HOST: '',
+        SMTP_PASSWORD: '',
+        SMTP_PORT: '',
+        SMTP_USERNAME: '',
+        SMTP_TEST_CONTENT: '',
+        SMTP_TEST_RECIPIENT_EMAIL: '',
+        SMTP_TEST_SUBJECT: ''
+    });
+
     const [envPath, setEnvPath] = React.useState<string>('');
-    return <AppContext.Provider value={{ data, setData, envPath, setEnvPath, googleClientId, setGoogleClientId, googleSecretKey, setGoogleSecretKey }}>
+    return <AppContext.Provider value={{ data, setData, envPath, setEnvPath }}>
         {children}
     </AppContext.Provider>
 }

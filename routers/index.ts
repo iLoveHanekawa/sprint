@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
-import { sprintGreet, getEnv } from './controllers/SprintEnvController.js'
+import { SprintEnvController } from './controllers/SprintEnvController.js'
 import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
+import { MailController } from './controllers/MailController.js';
 
 // TODO all keys gen
 
@@ -23,7 +24,13 @@ export type SprintVariables = JSObject<{
     SMTP_ENCRYPTION: string
     SMTP_CHARSET: string
     SMTP_DEBUG: string
+    SMTP_TEST_RECIPIENT_EMAIL: string
+    SMTP_TEST_SUBJECT: string
+    SMTP_TEST_CONTENT: string
+    [key: string]: string
 }>
+
+// TODO move this type elsewhere
 
 export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariables, error?: string, envPath?: string };
 
@@ -35,7 +42,7 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
     * @returns {Router} An express router.
     * @example 
     * // Note: these configurations work for a .env file located at app root. Also the permission's callback here returns true as its merely an example.
-    // Ideally the permission's callback would contain a way to authenticate an admin and only return true if a user with admin role is authenticated.
+    // Ideally the permission callback would contain a way to authenticate an admin and only return true if a user with admin role is authenticated.
     // For production ALWAYS implement the permissionCallback to secure the application otherwise your env file can be exposed.
     const currentModuleURL = import.meta.url;
     const currentModulePath = fileURLToPath(currentModuleURL);
@@ -48,8 +55,10 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
 
 export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; }}: SprintRouterConfig): Router => {
     const router = express.Router();
-    router.get('/', sprintGreet);
+    router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
-    router.get('/get-env', getEnv(envPath));
-    return router;
+    router.get('/get-env', SprintEnvController.getEnv(envPath));
+    router.post('/post-env', SprintEnvController.postEnv(envPath));
+    router.post('/send', MailController.send);
+    return router; 
 }

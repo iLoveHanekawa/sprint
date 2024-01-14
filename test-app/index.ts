@@ -5,9 +5,25 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 const app = express();
 
+const someObject: { a: number, b: number, [key: string]: number} = {
+    a: 1,
+    b: 1,
+}
+
+const objectKeys = <T extends Record<PropertyKey, any>> (obj: T): (keyof T)[] => {
+    return Object.keys(obj) as (keyof T)[];
+}
+
+Object.keys(someObject).forEach((key) => {
+    console.log(someObject[key]);
+})
+
+
 const currentModuleURL = import.meta.url;
 const currentModulePath = fileURLToPath(currentModuleURL);
 const basePath = resolve(dirname(currentModulePath), './.env');
+
+app.use(express.json());
 
 app.get('/', async (req: Request, res: Response) => {
     return res.json({
