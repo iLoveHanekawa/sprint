@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { config } from "dotenv";
 import type { SprintRouterGoogleClientConfig } from "../index.js";
 
-interface GoogleMiddleWareParams extends SprintRouterGoogleClientConfig {
+export interface GoogleMiddleWareParams extends SprintRouterGoogleClientConfig {
     envPath: string
 }
 

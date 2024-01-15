@@ -101,7 +101,8 @@ class GoogleClient {
     }
 
     private accessTokenExpired(tokenExpireTime: number): boolean {
-        const timeNow = Date.now() / 1000;
+        const timeNow = Date.now() + 300000;
+        console.log({ timeNow, tokenExpireTime });
         return timeNow > tokenExpireTime;
     }
 

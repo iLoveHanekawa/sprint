@@ -1,23 +1,31 @@
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
-/**
- * Controller for handling email sending functionality.
-*/
 export const MailController = {
-    send: (envPath) => async (req, res) => {
-        dotenv.config({ path: envPath });
+    send: (config) => async (req, res) => {
+        dotenv.config({ path: config.envPath });
         try {
             // Destructure request body or use default values if not provided
             const { subject = process.env.SMTP_TEST_SUBJECT, to = process.env.SMTP_TEST_RECIPIENT_EMAIL, html = process.env.SMTP_TEST_CONTENT } = req.body;
+            let authConfig = {
+                user: process.env.SMTP_USERNAME,
+                pass: process.env.SMTP_PASSWORD
+            };
+            const { refreshToken } = await config.getGoogleRefreshToken();
+            if (process.env.SMTP_HOST === 'smtp.gmail.com' && typeof config.getGoogleRefreshToken !== 'undefined') {
+                authConfig = {
+                    type: 'OAUTH2',
+                    user: process.env.SMTP_FROM_EMAIL,
+                    clientId: process.env.GOOGLE_CLIENT_ID,
+                    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                    refreshToken
+                };
+            }
             // Create a Nodemailer transport
             const transport = createTransport({
                 host: process.env.SMTP_HOST,
                 secure: false,
                 port: Number(process.env.SMTP_PORT),
-                auth: {
-                    user: process.env.SMTP_USERNAME,
-                    pass: process.env.SMTP_PASSWORD
-                },
+                auth: authConfig,
                 tls: {
                     rejectUnauthorized: false,
                 },

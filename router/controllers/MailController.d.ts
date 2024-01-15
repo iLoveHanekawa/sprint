@@ -6,9 +6,13 @@ export type MailResponseType = {
     mailer?: SMTPTransport.SentMessageInfo;
     error?: string;
 };
-/**
- * Controller for handling email sending functionality.
-*/
-export declare const MailController: {
-    send: (envPath: string) => (req: Request, res: Response<MailResponseType>) => Promise<Response<MailResponseType, Record<string, any>>>;
+type MailControllerConfig = {
+    envPath: string;
+    getGoogleRefreshToken?: (() => Promise<{
+        refreshToken: string;
+    }>);
 };
+export declare const MailController: {
+    send: (config: MailControllerConfig) => (req: Request, res: Response<MailResponseType>) => Promise<Response<MailResponseType, Record<string, any>>>;
+};
+export {};

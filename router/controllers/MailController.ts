@@ -2,15 +2,31 @@ import type { Request, Response } from "express";
 import { createTransport, type SentMessageInfo } from 'nodemailer';
 import dotenv from 'dotenv';
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import type SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
+import type XOAuth2 from "nodemailer/lib/xoauth2/index.js";
 
 export type MailResponseType = { status: boolean, message?: string, mailer?: SMTPTransport.SentMessageInfo, error?: string }
 
 /**
  * Controller for handling email sending functionality.
 */
+
+type AuthType = {
+    user?: string
+    pass?: string
+    clientId?: string
+    clientSecret?: string
+    refreshToken?: () => Promise<string>
+}
+
+type MailControllerConfig = {
+    envPath: string,
+    getGoogleRefreshToken?: (() => Promise<{ refreshToken: string }>)
+}
+
 export const MailController = {
-   send: (envPath: string) => async (req: Request, res: Response<MailResponseType>): Promise<Response<MailResponseType, Record<string, any>>> => {
-        dotenv.config({ path: envPath });
+   send: (config: MailControllerConfig) => async (req: Request, res: Response<MailResponseType>): Promise<Response<MailResponseType, Record<string, any>>> => {
+        dotenv.config({ path: config.envPath });
         try {
             // Destructure request body or use default values if not provided
             const { 
@@ -18,15 +34,28 @@ export const MailController = {
                 to = process.env.SMTP_TEST_RECIPIENT_EMAIL, 
                 html = process.env.SMTP_TEST_CONTENT 
             } = req.body;
+            let authConfig: SMTPConnection.Credentials | XOAuth2.Options & { type: any } = {
+                user: process.env.SMTP_USERNAME as string,
+                pass: process.env.SMTP_PASSWORD as string
+                
+            }
+            const { refreshToken } = await config.getGoogleRefreshToken!();
+
+            if(process.env.SMTP_HOST === 'smtp.gmail.com' && typeof config.getGoogleRefreshToken !== 'undefined') {
+                authConfig = {
+                    type: 'OAUTH2',
+                    user: process.env.SMTP_FROM_EMAIL!,
+                    clientId: process.env.GOOGLE_CLIENT_ID as string,
+                    clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+                    refreshToken
+                }
+            }
             // Create a Nodemailer transport
             const transport = createTransport({
                 host: process.env.SMTP_HOST,
                 secure: false,
                 port: Number(process.env.SMTP_PORT),
-                auth: {
-                    user: process.env.SMTP_USERNAME,
-                    pass: process.env.SMTP_PASSWORD
-                },
+                auth: authConfig,
                 tls: {
                     rejectUnauthorized: false,
                 },

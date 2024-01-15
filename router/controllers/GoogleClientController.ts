@@ -7,7 +7,6 @@ export interface GoogleClientConfig extends SprintRouterGoogleClientConfig {
     redirectUrl: string;
 }
 
-
 export const GoogleClientController = {
     showConsentScreen: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }: SprintRouterGoogleClientConfig) => async (req: Request, res: Response) => {
         try {
