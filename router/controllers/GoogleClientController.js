@@ -1,10 +1,15 @@
-import { GoogleClient } from "../clients/GoogleClient.js";
-import { format, parse } from "url";
-import { request } from "http";
+import { CreateGoogleClient } from "../clients/GoogleClient.js";
+import { format } from "url";
 export const GoogleClientController = {
-    showConsentScreen: async (req, res) => {
+    showConsentScreen: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }) => async (req, res) => {
         try {
-            const googleClient = new GoogleClient({ redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }) });
+            const googleClient = CreateGoogleClient({
+                redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }),
+                getGoogleAccessToken,
+                getGoogleRefreshToken,
+                storeGoogleAccessToken,
+                storeGoogleRefreshToken
+            });
             res.redirect(googleClient.getURLForConsentScreen());
         }
         catch (error) {
@@ -15,9 +20,15 @@ export const GoogleClientController = {
             });
         }
     },
-    getTokens: async (req, res) => {
+    getTokens: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }) => async (req, res) => {
         try {
-            const googleClient = new GoogleClient({ redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }) });
+            const googleClient = CreateGoogleClient({
+                redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }),
+                getGoogleAccessToken,
+                storeGoogleAccessToken,
+                storeGoogleRefreshToken,
+                getGoogleRefreshToken
+            });
             const { code } = req.query;
             if (!code) {
                 res.status(400).json({
@@ -25,7 +36,7 @@ export const GoogleClientController = {
                     error: 'Missing parameter'
                 });
             }
-            res.json(await googleClient.getCodeExchangeRequestBody(code));
+            res.json(await googleClient.exchangeCode(code));
         }
         catch (error) {
             console.log(error);
