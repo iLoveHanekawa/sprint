@@ -22,15 +22,15 @@ import { GoogleMiddleware } from './middlewares/GoogleClientMiddleware.js';
         permissionCallback: () => true
     }));
 */
-export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; } }) => {
+export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; }, getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }) => {
     const router = express.Router();
     router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
     router.post('/send', MailController.send(envPath));
-    router.use('/google', GoogleMiddleware(envPath));
-    router.get('/google/consent', GoogleClientController.showConsentScreen);
-    router.get('/google/code', GoogleClientController.getTokens);
+    router.use('/google', GoogleMiddleware({ envPath, getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
+    router.get('/google/consent', GoogleClientController.showConsentScreen({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
+    router.get('/google/code', GoogleClientController.getTokens({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
     return router;
 };

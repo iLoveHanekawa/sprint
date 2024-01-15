@@ -1,13 +1,27 @@
-export declare class GoogleClient {
+import type { GoogleClientConfig } from '../controllers/GoogleClientController.js';
+interface ExchangeCodeResponse {
+    access_token: string;
+    expires_in: number;
+    refresh_token: string;
+    scope: string;
+    token_type: "Bearer";
+}
+declare class GoogleClient {
     oauthCodeUrl: string;
     scopes: string;
-    redirectUrl: string;
     clientId: string | undefined;
     clientSecret: string | undefined;
     tokenUrl: string;
-    constructor(googleClientConfig: {
-        redirectUrl: string;
-    });
+    googleClientConfig: GoogleClientConfig;
+    constructor(googleClientConfig: GoogleClientConfig);
     getURLForConsentScreen(): string;
-    getCodeExchangeRequestBody(code: string): Promise<unknown>;
+    exchangeCode(code: string): Promise<ExchangeCodeResponse | {
+        success: boolean;
+        message: string;
+    }>;
+    private accessTokenExpired;
+    private exchangeRefreshToken;
+    getAccessToken(): Promise<string | undefined>;
 }
+export declare function CreateGoogleClient(googleClientConfig: GoogleClientConfig): GoogleClient;
+export {};

@@ -1,8 +1,19 @@
 import { Router } from 'express';
+export interface SprintRouterGoogleClientConfig {
+    storeGoogleAccessToken?: ((accessToken: string, expiresIn: number) => Promise<void>);
+    storeGoogleRefreshToken?: ((refreshToken: string) => Promise<void>);
+    getGoogleAccessToken?: (() => Promise<{
+        accessToken: string;
+        expiresIn: number;
+    }>);
+    getGoogleRefreshToken?: (() => Promise<{
+        refreshToken: string;
+    }>);
+}
 export type SprintRouterConfig = {
     envPath: string;
     permissionCallback?: (() => Promise<boolean>) | (() => boolean);
-};
+} & SprintRouterGoogleClientConfig;
 type JSObject<T extends {}> = T;
 export type SprintVariables = JSObject<{
     GOOGLE_CLIENT_ID: string;
@@ -45,5 +56,5 @@ export type SprintGetEnvResponse = {
         permissionCallback: () => true
     }));
 */
-export declare const getSprintRouter: ({ envPath, permissionCallback }: SprintRouterConfig) => Router;
+export declare const getSprintRouter: ({ envPath, permissionCallback, getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }: SprintRouterConfig) => Router;
 export {};

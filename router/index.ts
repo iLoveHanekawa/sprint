@@ -7,10 +7,17 @@ import { GoogleMiddleware } from './middlewares/GoogleClientMiddleware.js';
 
 // TODO all keys gen
 
+export interface SprintRouterGoogleClientConfig {
+    storeGoogleAccessToken?: ((accessToken: string, expiresIn: number) => Promise<void>)
+    storeGoogleRefreshToken?: ((refreshToken: string) => Promise<void>)
+    getGoogleAccessToken?: (() => Promise<{ accessToken: string; expiresIn: number }>)
+    getGoogleRefreshToken?: (() => Promise<{ refreshToken: string }>)
+}
+
 export type SprintRouterConfig = {
     envPath: string
     permissionCallback?: (() => Promise<boolean>) | (() => boolean)
-}
+} & SprintRouterGoogleClientConfig
 
 type JSObject<T extends {}> = T
 
@@ -55,15 +62,22 @@ export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariable
     }));
 */
 
-export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; } }: SprintRouterConfig): Router => {
+export const getSprintRouter = ({ 
+    envPath, 
+    permissionCallback = () => { return false; }, 
+    getGoogleAccessToken, 
+    getGoogleRefreshToken, 
+    storeGoogleAccessToken, 
+    storeGoogleRefreshToken 
+}: SprintRouterConfig): Router => {
     const router = express.Router();
     router.get('/', SprintEnvController.sprintGreet);
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
     router.post('/send', MailController.send(envPath));
-    router.use('/google', GoogleMiddleware(envPath));
-    router.get('/google/consent', GoogleClientController.showConsentScreen);
-    router.get('/google/code', GoogleClientController.getTokens);
+    router.use('/google', GoogleMiddleware({ envPath, getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
+    router.get('/google/consent', GoogleClientController.showConsentScreen({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
+    router.get('/google/code', GoogleClientController.getTokens({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
     return router; 
 }
