@@ -10,26 +10,26 @@ class GoogleClient {
         this.tokenUrl = 'https://oauth2.googleapis.com/token';
         this.googleClientConfig = googleClientConfig;
     }
-    getURLForConsentScreen() {
+    getURLForConsentScreen(redirectUrl) {
         return this.oauthCodeUrl + '?' + (new URLSearchParams({
             scope: this.scopes,
             access_type: 'offline',
             include_granted_scopes: 'true',
             client_id: this.clientId,
             prompt: 'consent',
-            redirect_uri: this.googleClientConfig.redirectUrl,
+            redirect_uri: redirectUrl,
             response_type: 'code',
             state: 'state_parameter_passthrough_value'
         })).toString();
     }
-    async exchangeCode(code) {
+    async exchangeCode(code, redirectUrl) {
         try {
             const requestBody = {
                 code,
                 client_id: this.clientId,
                 client_secret: this.clientSecret,
                 grant_type: 'authorization_code',
-                redirect_uri: this.googleClientConfig.redirectUrl
+                redirect_uri: redirectUrl
             };
             const res = await fetch(this.tokenUrl, {
                 headers: {
@@ -59,7 +59,6 @@ class GoogleClient {
                 client_id: this.clientId,
                 client_secret: this.clientSecret,
                 grant_type: 'refresh_token',
-                redirect_uri: this.googleClientConfig.redirectUrl,
                 refresh_token: refreshToken
             };
             const response = await fetch(this.tokenUrl, {

@@ -1,5 +1,6 @@
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
+import { CreateGoogleClient } from "../clients/GoogleClient.js";
 export const MailController = {
     send: (config) => async (req, res) => {
         dotenv.config({ path: config.envPath });
@@ -10,14 +11,20 @@ export const MailController = {
                 user: process.env.SMTP_USERNAME,
                 pass: process.env.SMTP_PASSWORD
             };
-            const { refreshToken } = await config.getGoogleRefreshToken();
             if (process.env.SMTP_HOST === 'smtp.gmail.com' && typeof config.getGoogleRefreshToken !== 'undefined') {
+                const googleClient = CreateGoogleClient({
+                    getGoogleAccessToken: config.getGoogleAccessToken,
+                    getGoogleRefreshToken: config.getGoogleRefreshToken,
+                    storeGoogleAccessToken: config.storeGoogleAccessToken,
+                    storeGoogleRefreshToken: config.storeGoogleRefreshToken
+                });
+                const accessToken = await googleClient.getAccessToken();
                 authConfig = {
                     type: 'OAUTH2',
                     user: process.env.SMTP_FROM_EMAIL,
                     clientId: process.env.GOOGLE_CLIENT_ID,
                     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                    refreshToken
+                    accessToken,
                 };
             }
             // Create a Nodemailer transport

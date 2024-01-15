@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 import type SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
 import type XOAuth2 from "nodemailer/lib/xoauth2/index.js";
+import type { SprintRouterGoogleClientConfig } from "../index.js";
+import { CreateGoogleClient } from "../clients/GoogleClient.js";
 
 export type MailResponseType = { status: boolean, message?: string, mailer?: SMTPTransport.SentMessageInfo, error?: string }
 
@@ -11,18 +13,9 @@ export type MailResponseType = { status: boolean, message?: string, mailer?: SMT
  * Controller for handling email sending functionality.
 */
 
-type AuthType = {
-    user?: string
-    pass?: string
-    clientId?: string
-    clientSecret?: string
-    refreshToken?: () => Promise<string>
-}
-
 type MailControllerConfig = {
-    envPath: string,
-    getGoogleRefreshToken?: (() => Promise<{ refreshToken: string }>)
-}
+    envPath: string
+} & SprintRouterGoogleClientConfig
 
 export const MailController = {
    send: (config: MailControllerConfig) => async (req: Request, res: Response<MailResponseType>): Promise<Response<MailResponseType, Record<string, any>>> => {
@@ -39,15 +32,23 @@ export const MailController = {
                 pass: process.env.SMTP_PASSWORD as string
                 
             }
-            const { refreshToken } = await config.getGoogleRefreshToken!();
-
+            
             if(process.env.SMTP_HOST === 'smtp.gmail.com' && typeof config.getGoogleRefreshToken !== 'undefined') {
+                const googleClient = CreateGoogleClient({
+                    getGoogleAccessToken: config.getGoogleAccessToken,
+                    getGoogleRefreshToken: config.getGoogleRefreshToken,
+                    storeGoogleAccessToken: config.storeGoogleAccessToken,
+                    storeGoogleRefreshToken: config.storeGoogleRefreshToken
+                });
+                
+                const accessToken = await googleClient.getAccessToken();
+
                 authConfig = {
                     type: 'OAUTH2',
                     user: process.env.SMTP_FROM_EMAIL!,
                     clientId: process.env.GOOGLE_CLIENT_ID as string,
                     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-                    refreshToken
+                    accessToken,
                 }
             }
             // Create a Nodemailer transport

@@ -1,4 +1,4 @@
-import type { GoogleClientConfig } from '../controllers/GoogleClientController.js';
+import type { SprintRouterGoogleClientConfig } from '../index.js';
 interface ExchangeCodeResponse {
     access_token: string;
     expires_in: number;
@@ -12,10 +12,10 @@ declare class GoogleClient {
     clientId: string | undefined;
     clientSecret: string | undefined;
     tokenUrl: string;
-    googleClientConfig: GoogleClientConfig;
-    constructor(googleClientConfig: GoogleClientConfig);
-    getURLForConsentScreen(): string;
-    exchangeCode(code: string): Promise<ExchangeCodeResponse | {
+    googleClientConfig: SprintRouterGoogleClientConfig;
+    constructor(googleClientConfig: SprintRouterGoogleClientConfig);
+    getURLForConsentScreen(redirectUrl: string): string;
+    exchangeCode(code: string, redirectUrl: string): Promise<ExchangeCodeResponse | {
         success: boolean;
         message: string;
     }>;
@@ -23,5 +23,5 @@ declare class GoogleClient {
     private exchangeRefreshToken;
     getAccessToken(): Promise<string | undefined>;
 }
-export declare function CreateGoogleClient(googleClientConfig: GoogleClientConfig): GoogleClient;
+export declare function CreateGoogleClient(googleClientConfig: SprintRouterGoogleClientConfig): GoogleClient;
 export {};
