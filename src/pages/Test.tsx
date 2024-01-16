@@ -1,6 +1,8 @@
 import React from 'react'
 import SprintForm from '../components/SprintForm';
 import TestMailForm from '../components/TestMailForm';
+import SprintHeading from '../components/SprintHeading';
+import SprintContentBlock from '../layout/SprintContentBlock';
 
 export default function Test() {
     const envKeyArr: { key: string, value: string }[] = [
@@ -10,9 +12,11 @@ export default function Test() {
     ];
   return (
     <>
-      <SprintForm envKeyArr={envKeyArr} />
-      <a href="http://localhost:3000/sprint/google/consent">Get permission</a>
-      <TestMailForm />
+      <SprintHeading name={"Test"} />
+      <SprintContentBlock heading='Test configuration'>
+        <SprintForm envKeyArr={envKeyArr} />
+        <TestMailForm />
+      </SprintContentBlock>
     </>
   )
 }

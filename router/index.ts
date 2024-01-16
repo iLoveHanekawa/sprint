@@ -36,6 +36,7 @@ export type SprintVariables = JSObject<{
     SMTP_TEST_RECIPIENT_EMAIL: string
     SMTP_TEST_SUBJECT: string
     SMTP_TEST_CONTENT: string
+    NODE_ENV: string
     [key: string]: string
 }>
 

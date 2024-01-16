@@ -1,5 +1,7 @@
 import React from 'react'
 import SprintForm from '../components/SprintForm';
+import SprintHeading from '../components/SprintHeading';
+import SprintContentBlock from '../layout/SprintContentBlock';
 
 export default function Basic() {
     const envKeyArr: { key: string, value: string }[] = [
@@ -11,6 +13,11 @@ export default function Basic() {
         { key: 'SMTP_PORT', value: 'SMTP port' },
     ];
   return (
-    <SprintForm envKeyArr={envKeyArr} />
+    <>
+      <SprintHeading name={"Basic"} />
+      <SprintContentBlock heading='Basic configuration'>
+        <SprintForm envKeyArr={envKeyArr} />
+      </SprintContentBlock>
+    </>
   )
 }

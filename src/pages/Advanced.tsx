@@ -1,5 +1,7 @@
 import React from 'react'
 import SprintForm from '../components/SprintForm';
+import SprintHeading from '../components/SprintHeading';
+import SprintContentBlock from '../layout/SprintContentBlock';
 
 export default function Advanced() {
     const envKeyArr: { key: string, value: string }[] = [
@@ -10,6 +12,11 @@ export default function Advanced() {
     ];
 
   return (
-    <SprintForm envKeyArr={envKeyArr} />
+    <>
+    <SprintHeading name="Advance" />
+    <SprintContentBlock heading='Advance configuration'>
+      <SprintForm envKeyArr={envKeyArr} />
+    </SprintContentBlock>
+    </>
   )
 }

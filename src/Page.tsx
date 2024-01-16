@@ -30,7 +30,7 @@ export default function Page() {
     return <Layout>
         <div className='min-h-screen flex'>
             <Sidebar />
-            <div className='p-6'>
+            <div className='p-6 min-w-half'>
                 { loading? <div>Loading</div>: <>
                     <div>
                         <Outlet />
