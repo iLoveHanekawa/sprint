@@ -4,6 +4,7 @@ import { SprintGetEnvResponse, SprintVariables } from '../router';
 import { AppContext, AppContextType } from './contexts/AppContext';
 import SprintForm from './components/SprintForm';
 import TestMailForm from './components/TestMailForm';
+import { Outlet } from '@tanstack/react-router';
 
 export default function Page() {
 
@@ -29,12 +30,15 @@ export default function Page() {
 
     return <Layout>
         Main contents
-        { loading && <div>Loading</div> } 
-        <div>
-            <p>Env file location: { appStore?.envPath }</p>
-            <SprintForm />
-            <TestMailForm />
-            <a href="http://localhost:3000/sprint/google/consent">Get permission</a>
-        </div>
+        { loading? <div>Loading</div>: <>
+            <div>
+                <p>Env file location: { appStore?.envPath }</p>
+                <SprintForm />
+                <TestMailForm />
+                <a href="http://localhost:3000/sprint/google/consent">Get permission</a>
+            </div>
+            <Outlet />
+        </>} 
+        
     </Layout>
 }
