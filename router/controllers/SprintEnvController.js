@@ -38,7 +38,8 @@ export const SprintEnvController = {
             'SMTP_DEBUG',
             'SMTP_TEST_RECIPIENT_EMAIL',
             'SMTP_TEST_SUBJECT',
-            'SMTP_TEST_CONTENT'
+            'SMTP_TEST_CONTENT',
+            'NODE_ENV'
         ];
         // Read or create env file.
         readFile(envPath, { encoding: 'utf8', flag: 'a+' }, async (err, data) => {
@@ -52,7 +53,9 @@ export const SprintEnvController = {
             let dataToWrite = '';
             // If a variable from { envKeyArr } is not already present in the env file, create it with empty string value.
             envKeyArr.forEach((value, index) => {
-                if (!(value in envObj))
+                if (value === 'NODE_ENV' && !(value in envObj))
+                    dataToWrite += `${EOL + value}=development`;
+                else if (!(value in envObj))
                     dataToWrite += `${EOL + value}=`;
             });
             try {

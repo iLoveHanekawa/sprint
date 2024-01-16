@@ -8,13 +8,13 @@ import Dashboard from './pages/Dashboard';
 import Basic from './pages/Basic';
 import Advanced from './pages/Advanced';
 import Google from './pages/Google';
+import Test from './pages/Test';
 
 const root = ReactDOM.createRoot(document.getElementById('app')!);
 
 const rootRoute = new RootRoute({
     component: () => { return <Page /> }
 });
-
 
 const indexRoute = new Route({
     getParentRoute: () => rootRoute,
@@ -40,7 +40,13 @@ const googleRoute = new Route({
     component: () => <Google />
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, basicRoute, advanceRoute, googleRoute]);
+const testRoute = new Route({
+    getParentRoute: () => rootRoute,
+    path: 'sprint/dist/test',
+    component: () => <Test />
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, basicRoute, advanceRoute, googleRoute, testRoute]);
 const router = new Router({ routeTree });
 
 root.render(

@@ -7,7 +7,7 @@ type LayoutType = {
 }
 
 export default function Layout({ children }: LayoutType) {
-    return <div className='font-inter'>
+    return <div className='font-nunito bg-primary antialiased'>
         <Header />
         { children }
         <Footer />

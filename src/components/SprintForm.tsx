@@ -2,27 +2,11 @@ import React, { FormEvent } from 'react';
 import { AppContext, AppContextType } from '../contexts/AppContext';
 import { SprintGetEnvResponse, SprintVariables } from '../../router';
 
-export default function SprintForm() {
+type SprintFormProps = { envKeyArr: { key: string, value: string }[] };
+
+export default function SprintForm({ envKeyArr }: SprintFormProps) {
 
     // TODO env specific changes
-    
-    const envKeyArr: { key: string, value: string }[] = [
-        { key: 'GOOGLE_CLIENT_ID', value: 'Google client ID' },
-        { key: 'GOOGLE_CLIENT_SECRET', value: 'Google client secret' },
-        { key: 'SMTP_HOST', value: 'SMTP host' },
-        { key: 'SMTP_FROM_EMAIL', value: 'SMTP from email' },
-        { key: 'SMTP_USERNAME', value: 'SMTP username' },
-        { key: 'SMTP_PASSWORD', value: 'SMTP password' },
-        { key: 'SMTP_PORT', value: 'SMTP port' },
-        { key: 'SMTP_CONTENT_TYPE', value: 'SMTP content type' },
-        { key: 'SMTP_ENCRYPTION', value: 'SMTP encryption' },
-        { key: 'SMTP_CHARSET', value: 'SMTP charset' },
-        { key: 'SMTP_DEBUG', value: 'SMTP debug' },
-        { key: 'SMTP_FROM_NAME', value: 'SMTP from name' },
-        { key: 'SMTP_TEST_RECIPIENT_EMAIL', value: 'SMTP test recipient\'s email' },
-        { key: 'SMTP_TEST_SUBJECT', value: ' SMTP test subject' },
-        { key: 'SMTP_TEST_CONTENT', value: 'SMTP test content' }
-    ];
     
     const appStore = React.useContext<AppContextType | null>(AppContext);
     
