@@ -1,11 +1,10 @@
 import { URLSearchParams } from 'url';
 import fetch from 'node-fetch'
-import type { GoogleClientConfig } from '../controllers/GoogleClientController.js';
+import type { SprintRouterGoogleClientConfig } from '../index.js';
 
 interface GoogleExchangeRequest {
     client_id: string;
     client_secret: string;
-    redirect_uri: string;
 }
 
 interface GoogleRefreshTokenResponse {
@@ -15,6 +14,7 @@ interface GoogleRefreshTokenResponse {
 
 interface GoogleCodeExchangeRequest extends GoogleExchangeRequest {
     code: string;
+    redirect_uri: string;
     grant_type: 'authorization_code';
 }
 
@@ -48,9 +48,9 @@ class GoogleClient {
     clientId: string | undefined;
     clientSecret: string | undefined;
     tokenUrl: string;
-    googleClientConfig: GoogleClientConfig
+    googleClientConfig: SprintRouterGoogleClientConfig
     //TODO state
-    constructor(googleClientConfig: GoogleClientConfig) {
+    constructor(googleClientConfig: SprintRouterGoogleClientConfig) {
         this.oauthCodeUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
         this.scopes = 'https://mail.google.com/';
         this.clientId = process.env.GOOGLE_CLIENT_ID;
@@ -59,20 +59,20 @@ class GoogleClient {
         this.googleClientConfig = googleClientConfig;
     }
 
-    public getURLForConsentScreen(): string {
+    public getURLForConsentScreen(redirectUrl: string): string {
         return this.oauthCodeUrl + '?' + (new URLSearchParams(({
             scope: this.scopes,
             access_type: 'offline',
             include_granted_scopes: 'true',
             client_id: this.clientId,
             prompt: 'consent',
-            redirect_uri: this.googleClientConfig.redirectUrl,
+            redirect_uri: redirectUrl,
             response_type: 'code',
             state: 'state_parameter_passthrough_value'
         } as OAuthCodeRequestPayload))).toString();
     }
 
-    public async exchangeCode(code: string): Promise<ExchangeCodeResponse | {
+    public async exchangeCode(code: string, redirectUrl: string): Promise<ExchangeCodeResponse | {
         success: boolean;
         message: string;
     }> {
@@ -82,7 +82,7 @@ class GoogleClient {
                 client_id: this.clientId as string,
                 client_secret: this.clientSecret as string,
                 grant_type: 'authorization_code',
-                redirect_uri: this.googleClientConfig.redirectUrl
+                redirect_uri: redirectUrl
             }
             const res = await fetch(this.tokenUrl, {
                 headers: {
@@ -101,7 +101,7 @@ class GoogleClient {
     }
 
     private accessTokenExpired(tokenExpireTime: number): boolean {
-        const timeNow = Date.now() / 1000;
+        const timeNow = Date.now() + 300000;
         return timeNow > tokenExpireTime;
     }
 
@@ -122,11 +122,11 @@ class GoogleClient {
                 client_id: this.clientId as string,
                 client_secret: this.clientSecret as string,
                 grant_type: 'refresh_token',
-                redirect_uri: this.googleClientConfig.redirectUrl,
                 refresh_token: refreshToken
             }
             const response = await fetch(this.tokenUrl, {
                 body: JSON.stringify(requestPayload),
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -163,6 +163,6 @@ class GoogleClient {
     }
 }
 
-export function CreateGoogleClient(googleClientConfig: GoogleClientConfig) {
+export function CreateGoogleClient(googleClientConfig: SprintRouterGoogleClientConfig) {
     return new GoogleClient(googleClientConfig);
 }

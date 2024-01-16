@@ -2,8 +2,8 @@ import React from 'react';
 import Layout from './layout/Layout';
 import { SprintGetEnvResponse, SprintVariables } from '../router';
 import { AppContext, AppContextType } from './contexts/AppContext';
-import SprintForm from './components/SprintForm';
-import TestMailForm from './components/TestMailForm';
+import { Outlet } from '@tanstack/react-router';
+import Sidebar from './components/Sidebar';
 
 export default function Page() {
 
@@ -28,13 +28,16 @@ export default function Page() {
     }, []);
 
     return <Layout>
-        Main contents
-        { loading && <div>Loading</div> } 
-        <div>
-            <p>Env file location: { appStore?.envPath }</p>
-            <SprintForm />
-            <TestMailForm />
-            <a href="http://localhost:3000/sprint/google/consent">Get permission</a>
+        <div className='min-h-screen flex'>
+            <Sidebar />
+            <div className='p-6 min-w-half'>
+                { loading? <div>Loading</div>: <>
+                    <div>
+                        <Outlet />
+                    </div>
+                </>} 
+            </div>
         </div>
+        
     </Layout>
 }

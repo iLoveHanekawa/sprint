@@ -3,22 +3,16 @@ import { CreateGoogleClient } from "../clients/GoogleClient.js";
 import { format } from "url";
 import type { SprintRouterGoogleClientConfig } from "../index.js";
 
-export interface GoogleClientConfig extends SprintRouterGoogleClientConfig {
-    redirectUrl: string;
-}
-
-
 export const GoogleClientController = {
     showConsentScreen: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }: SprintRouterGoogleClientConfig) => async (req: Request, res: Response) => {
         try {
             const googleClient = CreateGoogleClient({ 
-                redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code'}),
                 getGoogleAccessToken,
                 getGoogleRefreshToken,
                 storeGoogleAccessToken,
                 storeGoogleRefreshToken
             });
-            res.redirect(googleClient.getURLForConsentScreen());
+            res.redirect(googleClient.getURLForConsentScreen(format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code'})));
         } catch (error) {
             console.log(error);
             res.status(500).json({
@@ -30,7 +24,6 @@ export const GoogleClientController = {
     getTokens: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }: SprintRouterGoogleClientConfig) => async (req: Request, res: Response) => {
         try {
             const googleClient = CreateGoogleClient({ 
-                redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }),
                 getGoogleAccessToken,
                 storeGoogleAccessToken,
                 storeGoogleRefreshToken,
@@ -43,7 +36,7 @@ export const GoogleClientController = {
                     error: 'Missing parameter'
                 })
             }
-            res.json(await googleClient.exchangeCode(code as string));
+            res.json(await googleClient.exchangeCode(code as string, format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' })));
         } catch (error) {
             console.log(error);
             res.status(500).json({

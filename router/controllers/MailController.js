@@ -1,23 +1,38 @@
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
-/**
- * Controller for handling email sending functionality.
-*/
+import { CreateGoogleClient } from "../clients/GoogleClient.js";
 export const MailController = {
-    send: (envPath) => async (req, res) => {
-        dotenv.config({ path: envPath });
+    send: (config) => async (req, res) => {
+        dotenv.config({ path: config.envPath });
         try {
             // Destructure request body or use default values if not provided
             const { subject = process.env.SMTP_TEST_SUBJECT, to = process.env.SMTP_TEST_RECIPIENT_EMAIL, html = process.env.SMTP_TEST_CONTENT } = req.body;
+            let authConfig = {
+                user: process.env.SMTP_USERNAME,
+                pass: process.env.SMTP_PASSWORD
+            };
+            if (process.env.SMTP_HOST === 'smtp.gmail.com' && typeof config.getGoogleRefreshToken !== 'undefined') {
+                const googleClient = CreateGoogleClient({
+                    getGoogleAccessToken: config.getGoogleAccessToken,
+                    getGoogleRefreshToken: config.getGoogleRefreshToken,
+                    storeGoogleAccessToken: config.storeGoogleAccessToken,
+                    storeGoogleRefreshToken: config.storeGoogleRefreshToken
+                });
+                const accessToken = await googleClient.getAccessToken();
+                authConfig = {
+                    type: 'OAUTH2',
+                    user: process.env.SMTP_FROM_EMAIL,
+                    clientId: process.env.GOOGLE_CLIENT_ID,
+                    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                    accessToken,
+                };
+            }
             // Create a Nodemailer transport
             const transport = createTransport({
                 host: process.env.SMTP_HOST,
                 secure: false,
                 port: Number(process.env.SMTP_PORT),
-                auth: {
-                    user: process.env.SMTP_USERNAME,
-                    pass: process.env.SMTP_PASSWORD
-                },
+                auth: authConfig,
                 tls: {
                     rejectUnauthorized: false,
                 },

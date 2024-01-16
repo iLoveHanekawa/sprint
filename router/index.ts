@@ -36,6 +36,7 @@ export type SprintVariables = JSObject<{
     SMTP_TEST_RECIPIENT_EMAIL: string
     SMTP_TEST_SUBJECT: string
     SMTP_TEST_CONTENT: string
+    NODE_ENV: string
     [key: string]: string
 }>
 
@@ -75,7 +76,7 @@ export const getSprintRouter = ({
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
-    router.post('/send', MailController.send(envPath));
+    router.post('/send', MailController.send({ envPath, getGoogleRefreshToken, getGoogleAccessToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
     router.use('/google', GoogleMiddleware({ envPath, getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
     router.get('/google/consent', GoogleClientController.showConsentScreen({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));
     router.get('/google/code', GoogleClientController.getTokens({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }));

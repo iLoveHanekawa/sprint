@@ -4,13 +4,12 @@ export const GoogleClientController = {
     showConsentScreen: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }) => async (req, res) => {
         try {
             const googleClient = CreateGoogleClient({
-                redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }),
                 getGoogleAccessToken,
                 getGoogleRefreshToken,
                 storeGoogleAccessToken,
                 storeGoogleRefreshToken
             });
-            res.redirect(googleClient.getURLForConsentScreen());
+            res.redirect(googleClient.getURLForConsentScreen(format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' })));
         }
         catch (error) {
             console.log(error);
@@ -23,7 +22,6 @@ export const GoogleClientController = {
     getTokens: ({ getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }) => async (req, res) => {
         try {
             const googleClient = CreateGoogleClient({
-                redirectUrl: format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' }),
                 getGoogleAccessToken,
                 storeGoogleAccessToken,
                 storeGoogleRefreshToken,
@@ -36,7 +34,7 @@ export const GoogleClientController = {
                     error: 'Missing parameter'
                 });
             }
-            res.json(await googleClient.exchangeCode(code));
+            res.json(await googleClient.exchangeCode(code, format({ protocol: req.protocol, host: req.get('host'), pathname: 'sprint/google/code' })));
         }
         catch (error) {
             console.log(error);

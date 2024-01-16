@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import type { SprintRouterGoogleClientConfig } from "../index.js";
 export type MailResponseType = {
     status: boolean;
     message?: string;
@@ -9,6 +10,10 @@ export type MailResponseType = {
 /**
  * Controller for handling email sending functionality.
 */
+type MailControllerConfig = {
+    envPath: string;
+} & SprintRouterGoogleClientConfig;
 export declare const MailController: {
-    send: (envPath: string) => (req: Request, res: Response<MailResponseType>) => Promise<Response<MailResponseType, Record<string, any>>>;
+    send: (config: MailControllerConfig) => (req: Request, res: Response<MailResponseType>) => Promise<Response<MailResponseType, Record<string, any>>>;
 };
+export {};

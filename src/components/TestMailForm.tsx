@@ -15,7 +15,7 @@ export default function TestMailForm() {
         console.log(data);
     }
 
-    return <form onSubmit={onSubmitHandler}>
-        <button type="submit">Test mail</button>
+    return <form className="mt-2.5" onSubmit={onSubmitHandler}>
+        <button className="bg-button-tertiary text-white secondary-button" type="submit">Test mail</button>
     </form>
 }
