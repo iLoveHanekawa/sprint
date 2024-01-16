@@ -102,7 +102,6 @@ class GoogleClient {
 
     private accessTokenExpired(tokenExpireTime: number): boolean {
         const timeNow = Date.now() + 300000;
-        console.log({ timeNow, tokenExpireTime });
         return timeNow > tokenExpireTime;
     }
 
@@ -127,6 +126,7 @@ class GoogleClient {
             }
             const response = await fetch(this.tokenUrl, {
                 body: JSON.stringify(requestPayload),
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 }
