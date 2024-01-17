@@ -4,6 +4,7 @@ import { SprintGetEnvResponse, SprintVariables } from '../router';
 import { AppContext, AppContextType } from './contexts/AppContext';
 import { Outlet } from '@tanstack/react-router';
 import Sidebar from './components/Sidebar';
+import SprintToast from './components/SprintToast';
 
 export default function Page() {
 
@@ -28,6 +29,7 @@ export default function Page() {
     }, []);
 
     return <Layout>
+        <SprintToast />
         <div className='min-h-screen flex'>
             <Sidebar />
             <div className='p-6 min-w-half'>

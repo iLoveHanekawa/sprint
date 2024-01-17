@@ -47,7 +47,7 @@ select {
     @apply text-sm font-semibold py-2 px-5 rounded-md
 }
 
-.primary-button:hover {
+.primary-button:hover, .secondary-button:hover, .tertiary-button:hover {
     box-shadow: none;
 }
 
@@ -65,4 +65,29 @@ select {
 
 .tertiary-button {
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(33, 150, 243, 0.6) 0px 10px 20px -10px
+}
+
+.sprint-toast {
+    box-shadow: 0 0 1px rgba(0,0,0,.075), 0 1px 2px rgba(0,0,0,.075), 1px 2px 4px rgba(0,0,0,.075), 1px 3px 8px rgba(0,0,0,.075), 2px 4px 16px rgba(0,0,0,.075);
+    @apply p-5 text-base text-white absolute top-2 right-2 z-10 rounded-md bg-group-left-alt w-3/12 flex items-start justify-between
+}
+
+.sprint-toast-normal-animation {
+    animation: fade-in-out 6s ease forwards;
+}
+
+.sprint-toast-force-fadeout {
+    animation: fade-out 300ms ease forwards;
+}
+
+@keyframes fade-out {
+    0% { }
+    100% { opacity: 0; transform: translateY(-12px); }
+}
+
+@keyframes fade-in-out {
+    0% { opacity: 0; transform: translateY(-12px); }
+    5% { opacity: 1; transform: translateY(0); }
+    95% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-12px); }
 }

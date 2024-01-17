@@ -39,10 +39,12 @@ export default {
       textColor: {
         primary: 'rgb(224, 230, 237)',
         secondary: 'rgb(136, 142, 168)',
-        teritary: 'rgb(81, 83, 101)',
+        tertiary: 'rgb(81, 83, 101)',
         "active-nav-link": 'rgb(136, 142, 168)',
         "inactive-nav-link": 'rgb(80, 102, 144)',
         link: 'rgb(67, 97, 238)',
+        error: 'rgb(231, 81, 90)',
+        success: 'rgb(0, 171, 85)'
       },
       fontFamily: {
         archivo: 'Archivo, sans-serif',
