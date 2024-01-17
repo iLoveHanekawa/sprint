@@ -9,6 +9,7 @@ import Basic from './pages/Basic';
 import Advanced from './pages/Advanced';
 import Google from './pages/Google';
 import Test from './pages/Test';
+import { ToastContextProvider } from './contexts/ToastContext';
 
 const root = ReactDOM.createRoot(document.getElementById('app')!);
 
@@ -52,7 +53,9 @@ const router = new Router({ routeTree });
 root.render(
     <StrictMode>
         <AppContextProvider>
-            <RouterProvider router={router} />
+            <ToastContextProvider>
+                <RouterProvider router={router} />
+            </ToastContextProvider>
         </AppContextProvider>
     </StrictMode>
 );

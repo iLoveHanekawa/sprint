@@ -7,8 +7,9 @@
     "dev": "vite",
     "start": "concurrently \"vite\" \"cd router && tsc.cmd -w\" \"cd test-app && tsc.cmd -w\" \"cd test-app && npx nodemon index.js\"",
     "actions": "concurrently \"vite\" \"cd test-app && npx nodemon index.js\"",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "concurrently \"vite preview\" \"cd router && tsc.cmd -w\" \"cd test-app && tsc.cmd -w\" \"cd test-app && npx nodemon index.js\""
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",

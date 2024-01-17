@@ -13,8 +13,8 @@ export default function Advanced() {
 
   return (
     <>
-    <SprintHeading name="Advance" />
-    <SprintContentBlock heading='Advance configuration'>
+    <SprintHeading name="Advanced" />
+    <SprintContentBlock heading='Advanced configuration'>
       <SprintForm envKeyArr={envKeyArr} />
     </SprintContentBlock>
     </>

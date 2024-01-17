@@ -1,68 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.sprint-nav-link {
-    @apply px-2.5 py-1.5 font-semibold flex gap-3 items-center text-sm hover:bg-tertiary hover:text-active-nav-link rounded-md mb-1
-}
-
-.text-active-nav-link .sprint-nav-icon {
-    @apply text-link
-}
-
-.text-inactive-nav-link:hover .sprint-nav-icon {
-    @apply text-link
-}
-
-.sprint-group-of-two {
-    @apply flex items-center text-sm font-semibold text-secondary mb-5
-}
-
-.sprint-group-right, .sprint-group-right-alt {
-    @apply bg-group-right py-2 px-4 rounded-r-md border-0.8 border-primary
-}
-
-.sprint-group-left, .sprint-group-left-alt {
-    @apply bg-group-left py-2 px-3 rounded-l-md border-l-0.8 border-t-0.8 border-b-0.8 border-primary
-}
-
-.sprint-group-left-alt {
-    @apply bg-group-left-alt text-white
-}
-
-.sprint-group-right-alt {
-    @apply capitalize
-}
-
-select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    text-indent: 1px;
-    text-overflow: '';
-}
-
-.primary-button, .secondary-button, .tertiary-button {
-    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(67, 97, 238, 0.6) 0px 10px 20px -10px;
-    @apply text-sm font-semibold py-2 px-5 rounded-md
-}
-
-.primary-button:hover {
-    box-shadow: none;
-}
-
-.sprint-label {
-    @apply mb-1.5 text-sm text-secondary font-semibold;
-}
-
-.sprint-input {
-    @apply py-2 px-4 text-sm text-secondary border-0.8 border-primary focus:border-tertiary outline-none rounded-md
-}
-
-.secondary-button {
-    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 171, 85, 0.6) 0px 10px 20px -10px;
-}
-
-.tertiary-button {
-    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(33, 150, 243, 0.6) 0px 10px 20px -10px
-}
+.sprint-nav-link { @apply px-2.5 py-1.5 font-semibold flex gap-3 items-center text-sm hover:bg-tertiary hover:text-active-nav-link rounded-md mb-1 }
+.text-active-nav-link .sprint-nav-icon { @apply text-link }
+.text-inactive-nav-link:hover .sprint-nav-icon { @apply text-link }
+.sprint-group-of-two { @apply flex items-center text-sm font-semibold text-secondary mb-5 }
+.sprint-group-right, .sprint-group-right-alt { @apply bg-group-right py-2 px-4 rounded-r-md border-0.8 border-primary }
+.sprint-group-left, .sprint-group-left-alt { @apply bg-group-left py-2 px-3 rounded-l-md border-l-0.8 border-t-0.8 border-b-0.8 border-primary }
+.sprint-group-left-alt { @apply bg-group-left-alt text-white }
+.sprint-group-right-alt { @apply capitalize }
+select { -webkit-appearance: none; -moz-appearance: none; text-indent: 1px; text-overflow: ''; }
+.primary-button, .secondary-button, .tertiary-button { transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(67, 97, 238, 0.6) 0px 10px 20px -10px; @apply text-sm font-semibold py-2 px-5 rounded-md }
+.primary-button:hover, .secondary-button:hover, .tertiary-button:hover { box-shadow: none; }
+.sprint-label { @apply mb-1.5 text-sm text-secondary font-semibold; }
+.sprint-input { @apply py-2 px-4 text-sm text-secondary border-0.8 border-primary focus:border-tertiary outline-none rounded-md }
+.secondary-button { box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 171, 85, 0.6) 0px 10px 20px -10px; }
+.tertiary-button { box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(33, 150, 243, 0.6) 0px 10px 20px -10px }
+.sprint-toast { box-shadow: 0 0 1px rgba(0,0,0,.075), 0 1px 2px rgba(0,0,0,.075), 1px 2px 4px rgba(0,0,0,.075), 1px 3px 8px rgba(0,0,0,.075), 2px 4px 16px rgba(0,0,0,.075); @apply p-5 text-base text-white fixed top-2 right-2 z-10 rounded-md w-3/12 flex items-start justify-between }
+.sprint-toast-normal-animation { animation: fade-in-out 6s ease forwards; }
+.sprint-toast-force-fadeout { animation: fade-out 300ms ease forwards; } 
+@keyframes fade-out { 0% { } 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes fade-in-out { 0% { opacity: 0; transform: translateY(-12px); } 5% { opacity: 1; transform: translateY(0); } 95% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-12px); } }
