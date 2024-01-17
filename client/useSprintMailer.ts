@@ -9,11 +9,14 @@ export type SprintMailResponse = {
 export const useSprintMailer = (sprintRouterRootUrl: string) => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
-    const [success, setSuccess] = React.useState<string | null>(null);
+    const [success, setSuccess] = React.useState<boolean>(false);
     const [mailer, setMailer] = React.useState<any | null>(null);
 
     const sendMail = async() => {
         setLoading(true);
+        setError(null);
+        setSuccess(false);
+        setMailer(null);
         try {
             const res = await fetch(sprintRouterRootUrl + '/send', {
                 method: "POST",
@@ -27,7 +30,7 @@ export const useSprintMailer = (sprintRouterRootUrl: string) => {
                 throw new Error(data.message);
             }
             setLoading(false);
-            setSuccess(data.message);
+            setSuccess(true);
             return data;
         } catch (error) {
             if(error instanceof Error) {
