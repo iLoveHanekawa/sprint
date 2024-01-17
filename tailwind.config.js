@@ -18,6 +18,7 @@ export default {
         tertiary: 'rgb(67, 97, 238)'
       },
       backgroundColor: {
+        error: 'rgb(231, 81, 90)',
         primary: 'rgb(6, 8, 24)',
         secondary: 'rgb(14, 23, 38)',
         tertiary: 'rgb(24, 31, 50)',

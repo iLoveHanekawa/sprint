@@ -9,7 +9,7 @@ export default function SprintToast() {
         { toastConfig?.renderToast && <div onAnimationEnd={() => { 
             toastConfig.setRenderToast(false); 
             setForceFade(false);
-        }} className={`sprint-toast sprint-toast-normal-animation ${forceFade? 'sprint-toast-force-fadeout': ''}`}>{ toastConfig.content }
+        }} className={`sprint-toast sprint-toast-normal-animation ${forceFade? 'sprint-toast-force-fadeout': ''} ${toastConfig.isError? 'bg-error': 'bg-group-left-alt'}`}>{ toastConfig.content }
             <button className='ml-7' onClick={() => {
                 setForceFade(true);
             }}>

@@ -3,19 +3,16 @@ import React from "react";
 export type SprintMailResponse = {
     status: boolean
     mailer: Record<string, any>
-    message: string
+    message?: string
+    error?: string
 }
 
 export const useSprintMailer = (sprintRouterRootUrl: string) => {
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [error, setError] = React.useState<string | null>(null);
-    const [success, setSuccess] = React.useState<boolean>(false);
     const [mailer, setMailer] = React.useState<any | null>(null);
 
     const sendMail = async() => {
         setLoading(true);
-        setError(null);
-        setSuccess(false);
         setMailer(null);
         try {
             const res = await fetch(sprintRouterRootUrl + '/send', {
@@ -26,19 +23,12 @@ export const useSprintMailer = (sprintRouterRootUrl: string) => {
             });
             const data: SprintMailResponse = await res.json();
             setMailer(data.mailer);
-            if(data.status === false) {
-                throw new Error(data.message);
-            }
             setLoading(false);
-            setSuccess(true);
             return data;
         } catch (error) {
-            if(error instanceof Error) {
-                setLoading(false);
-                setError(error.message);
-            }
+            console.log(error);
         }
 
     }
-    return { loading, error, success, mailer, sendMail };
+    return { loading, mailer, sendMail };
 }
