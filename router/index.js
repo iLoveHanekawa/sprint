@@ -29,6 +29,7 @@ const basePath = resolve(dirname(currentModulePath), '../dist');
 */
 export const getSprintRouter = ({ envPath, permissionCallback = () => { return false; }, getGoogleAccessToken, getGoogleRefreshToken, storeGoogleAccessToken, storeGoogleRefreshToken }) => {
     const router = express.Router();
+    router.use(express.json());
     router.use(express.static(basePath));
     router.use('/google', express.static(basePath));
     router.use('/dashboard', express.static(basePath));

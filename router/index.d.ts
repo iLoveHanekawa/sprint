@@ -34,6 +34,7 @@ export type SprintVariables = JSObject<{
     [key: string]: string;
 }>;
 export type SprintGetEnvResponse = {
+    message?: string;
     status: boolean;
     variables?: SprintVariables;
     error?: string;

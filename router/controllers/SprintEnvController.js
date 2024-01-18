@@ -129,6 +129,7 @@ export const SprintEnvController = {
                 }
                 return res.json({
                     status: true,
+                    message: 'Successfully updated env file.',
                     variables: dotenv.parse(data),
                     envPath: envPath
                 });
