@@ -19,31 +19,31 @@ const rootRoute = new RootRoute({
 
 const indexRoute = new Route({
     getParentRoute: () => rootRoute,
-    path: 'sprint/dist/',
+    path: 'sprint/',
     component: () => <Dashboard />
 });
 
 const basicRoute = new Route({
     getParentRoute: () => rootRoute,
-    path: 'sprint/dist/basic',
+    path: 'sprint/basic',
     component: () => <Basic />
 });
 
 const advanceRoute = new Route({
     getParentRoute: () => rootRoute,
-    path: 'sprint/dist/advance',
+    path: 'sprint/advanced',
     component: () => <Advanced />
 })
 
 const googleRoute = new Route({
     getParentRoute: () => rootRoute,
-    path: 'sprint/dist/google',
+    path: 'sprint/google',
     component: () => <Google />
 })
 
 const testRoute = new Route({
     getParentRoute: () => rootRoute,
-    path: 'sprint/dist/test',
+    path: 'sprint/test',
     component: () => <Test />
 })
 
