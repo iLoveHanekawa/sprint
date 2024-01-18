@@ -4,6 +4,12 @@ import { SprintMiddleware } from './middlewares/SprintMiddleware.js';
 import { MailController } from './controllers/MailController.js';
 import { GoogleClientController } from './controllers/GoogleClientController.js';
 import { GoogleMiddleware } from './middlewares/GoogleClientMiddleware.js';
+import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url';
+
+const currentModuleURL = import.meta.url;
+const currentModulePath = fileURLToPath(currentModuleURL);
+const basePath = resolve(dirname(currentModulePath), '../dist');
 
 // TODO all keys gen
 
@@ -72,7 +78,13 @@ export const getSprintRouter = ({
     storeGoogleRefreshToken 
 }: SprintRouterConfig): Router => {
     const router = express.Router();
-    router.get('/', SprintEnvController.sprintGreet);
+    router.use(express.static(basePath));
+    router.use('/google', express.static(basePath));
+    router.use('/dashboard', express.static(basePath));
+    router.use('/test', express.static(basePath));
+    router.use('/basic', express.static(basePath));
+    router.use('/advanced', express.static(basePath));
+
     router.use(SprintMiddleware(permissionCallback));
     router.get('/get-env', SprintEnvController.getEnv(envPath));
     router.post('/post-env', SprintEnvController.postEnv(envPath));
