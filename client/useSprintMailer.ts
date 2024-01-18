@@ -26,6 +26,7 @@ export const useSprintMailer = (sprintRouterRootUrl: string) => {
             setLoading(false);
             return data;
         } catch (error) {
+            setLoading(false);
             console.log(error);
         }
 
