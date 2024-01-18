@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 export const GoogleMiddleware = (googleMiddleWareParams) => (req, res, next) => {
     try {
-        config({ path: googleMiddleWareParams.envPath });
+        config({ path: googleMiddleWareParams.envPath, override: true });
         if (!process.env.GOOGLE_CLIENT_ID
             || !process.env.GOOGLE_CLIENT_SECRET
             || !googleMiddleWareParams.getGoogleAccessToken

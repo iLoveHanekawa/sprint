@@ -8,7 +8,7 @@ import { SprintGetEnvResponse, SprintVariables } from '../router';
 const currentModuleURL = import.meta.url;
 const currentModulePath = fileURLToPath(currentModuleURL);
 const basePath = resolve(dirname(currentModulePath), '../test-app/.env');
-dotenv.config({ path: basePath });
+dotenv.config({ path: basePath, override: true });
 
 test.describe('REST routes', () => {
 

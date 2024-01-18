@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { CreateGoogleClient } from "../clients/GoogleClient.js";
 export const MailController = {
     send: (config) => async (req, res) => {
-        dotenv.config({ path: config.envPath });
+        dotenv.config({ path: config.envPath, override: true });
         try {
             // Destructure request body or use default values if not provided
             const { subject = process.env.SMTP_TEST_SUBJECT, to = process.env.SMTP_TEST_RECIPIENT_EMAIL, html = process.env.SMTP_TEST_CONTENT } = req.body;
