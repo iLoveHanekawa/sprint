@@ -41,7 +41,7 @@ Assuming you have already installed the `@ilovehanekawa/sprint` package in your 
 
 ```jsx
 import React, { useState } from 'react';
-import { useSprintMailer } from '@ilovehanekawa/sprint';
+import { useSprintMailer } from '@ilovehanekawa/sprint/client';
 
 const EmailSender = () => {
     // Destructuring the useSprintMailer hook for concise syntax
