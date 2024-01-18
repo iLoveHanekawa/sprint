@@ -19,7 +19,7 @@ type MailControllerConfig = {
 
 export const MailController = {
    send: (config: MailControllerConfig) => async (req: Request, res: Response<MailResponseType>): Promise<Response<MailResponseType, Record<string, any>>> => {
-        dotenv.config({ path: config.envPath });
+        dotenv.config({ path: config.envPath, override: true });
         try {
             // Destructure request body or use default values if not provided
             const { 

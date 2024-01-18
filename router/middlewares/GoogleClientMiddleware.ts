@@ -8,7 +8,7 @@ export interface GoogleMiddleWareParams extends SprintRouterGoogleClientConfig {
 
 export const GoogleMiddleware = (googleMiddleWareParams: GoogleMiddleWareParams) => (req: Request, res: Response, next: NextFunction) => {
     try {
-        config({ path: googleMiddleWareParams.envPath });
+        config({ path: googleMiddleWareParams.envPath, override: true });
         if(!process.env.GOOGLE_CLIENT_ID 
             || !process.env.GOOGLE_CLIENT_SECRET 
             || !googleMiddleWareParams.getGoogleAccessToken 
