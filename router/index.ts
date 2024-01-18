@@ -48,7 +48,7 @@ export type SprintVariables = JSObject<{
 
 // TODO move this type elsewhere
 
-export type SprintGetEnvResponse = { status: boolean, variables?: SprintVariables, error?: string, envPath?: string };
+export type SprintGetEnvResponse = { message?: string, status: boolean, variables?: SprintVariables, error?: string, envPath?: string };
 
 /**
     * Returns a sprint router to be used as a second argument to app.use()
@@ -78,6 +78,7 @@ export const getSprintRouter = ({
     storeGoogleRefreshToken 
 }: SprintRouterConfig): Router => {
     const router = express.Router();
+    router.use(express.json());
     router.use(express.static(basePath));
     router.use('/google', express.static(basePath));
     router.use('/dashboard', express.static(basePath));

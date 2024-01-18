@@ -1,5 +1,5 @@
 import React, { FormEvent } from "react";
-import { useSprintMailer } from '../../client/useSprintMailer';
+import { useSprintMailer } from '../../client';
 import { ToastContext, ToastContextType } from "../contexts/ToastContext";
 import { AppContext, AppContextType } from "../contexts/AppContext";
 
