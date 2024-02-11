@@ -86,71 +86,28 @@ Assuming you have already installed the `@ilovehanekawa/sprint` package in your 
 
 ### Example
 
-```jsx
-import React, { useState } from 'react';
+```tsx
 import { useSprintMailer } from '@ilovehanekawa/sprint/client';
 
-const EmailSender = () => {
-    // Destructuring the useSprintMailer hook for concise syntax
+export const SendMailForm: React.FC = () => {
     const { loading, sendMail } = useSprintMailer('http://localhost:3000/sprint');
-
-    // State to manage email content
-    const [emailContent, setEmailContent] = useState({
-        to: 'recipient@example.com',
-        subject: 'Test Email',
-        body: 'This is a test email sent using Sprint!',
-    });
-
-    // Handler function to send the test email
-    const handleSendMail = async () => {
-        try {
-            // Send the email using the sendMail function from the hook
-            const response = await sendMail({
-                to: emailContent.to,
-                subject: emailContent.subject,
-                body: emailContent.body,
+    async function onSubmitHandler(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        try{
+            const data = await sendMail({
+                to: 'arjunthakur900@gmail.com',
+                subject: 'Test sprint mail',
+                html: '<h1>Hello this is a test mail</h1>'
             });
-
-            // Log the response from the Sprint mailer API
-            console.log(response);
-        } catch (error) {
-            console.error('Error sending email:', error);
+            console.log({data});
+        } catch(error) {
+            console.log(error); 
         }
-    };
+    }
 
-    return (
-        <div>
-            <h2>Email Sender</h2>
-            <label>
-                To:
-                <input
-                    type="email"
-                    value={emailContent.to}
-                    onChange={(e) => setEmailContent({ ...emailContent, to: e.target.value })}
-                />
-            </label>
-            <label>
-                Subject:
-                <input
-                    type="text"
-                    value={emailContent.subject}
-                    onChange={(e) => setEmailContent({ ...emailContent, subject: e.target.value })}
-                />
-            </label>
-            <label>
-                Body:
-                <textarea
-                    value={emailContent.body}
-                    onChange={(e) => setEmailContent({ ...emailContent, body: e.target.value })}
-                />
-            </label>
-            <button onClick={handleSendMail} disabled={loading}>
-                Send Test Email
-            </button>
-            {loading && <p>Sending...</p>}
-        </div>
-    );
-};
+    return <form onSubmit={onSubmitHandler}>
+        <button disabled={loading} type="submit">Send mail</button>
+    </form>
+}
 
-export default EmailSender;
 ```
