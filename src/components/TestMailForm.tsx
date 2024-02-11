@@ -16,6 +16,7 @@ export default function TestMailForm() {
             event.preventDefault();
             setShowMessage(false);
             const data = await sendMail();
+            console.log({data});
             if(data?.status) {
                 setSuccess(true);
                 toast?.setIsError(false);

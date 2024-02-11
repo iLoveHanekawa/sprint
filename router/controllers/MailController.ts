@@ -6,12 +6,22 @@ import type SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
 import type XOAuth2 from "nodemailer/lib/xoauth2/index.js";
 import type { SprintRouterGoogleClientConfig } from "../index.js";
 import { CreateGoogleClient } from "../clients/GoogleClient.js";
+import type Mail from "nodemailer/lib/mailer/index.js";
+import type internal from "stream";
 
 export type MailResponseType = { status: boolean, message?: string, mailer?: SMTPTransport.SentMessageInfo, error?: string }
 
 /**
  * Controller for handling email sending functionality.
 */
+
+
+export type SendSprintMailArgs = {
+    to: string | Mail.Address | (string | Mail.Address)[] | undefined;
+    subject: string | undefined;
+    html: string | internal.Readable | Buffer | Mail.AttachmentLike | undefined
+}
+
 
 type MailControllerConfig = {
     envPath: string

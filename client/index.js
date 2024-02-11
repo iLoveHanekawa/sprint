@@ -3,7 +3,7 @@ import React from "react";
 export const useSprintMailer = (sprintRouterRootUrl) => {
     const [loading, setLoading] = React.useState(false);
     const [mailer, setMailer] = React.useState(null);
-    const sendMail = async () => {
+    const sendMail = async (sendSprintMailArgs) => {
         setLoading(true);
         setMailer(null);
         try {
@@ -11,7 +11,8 @@ export const useSprintMailer = (sprintRouterRootUrl) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                body: sendSprintMailArgs ? JSON.stringify(sendSprintMailArgs) : null
             });
             const data = await res.json();
             setMailer(data.mailer);
